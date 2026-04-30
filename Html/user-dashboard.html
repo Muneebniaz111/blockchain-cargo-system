@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User Dashboard - Shipyard Cargo Management System">
+    <meta name="theme-color" content="#0a2847">
+    <title>User Dashboard - Shipyard Cargo Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../Css/user-dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <div class="user-container">
+
+        <!-- Top Navbar -->
+        <nav class="user-navbar">
+            <div class="navbar-content">
+                <div class="navbar-left">
+                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a href="index.html" class="navbar-brand-link" aria-label="Shipyard home">
+                        <span class="navbar-brand-logo-wrap" aria-hidden="true">
+                            <img src="../Assest/anchor_icon.png" alt="" class="navbar-brand-logo">
+                        </span>
+                        <span class="navbar-brand-copy">
+                            <span class="navbar-brand-text">Shipyard Portal</span>
+                            <span class="navbar-brand-subtext">User workspace</span>
+                        </span>
+                    </a>
+                    <div class="topbar-copy">
+                        <span class="topbar-crumb">Dashboard / Overview</span>
+                        <h1>Dashboard</h1>
+                    </div>
+                </div>
+                <div class="navbar-right">
+                    <label class="topbar-search" aria-label="Search cargo">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <input type="search" id="navbarSearchInput" placeholder="Search cargo ID...">
+                    </label>
+                    <div class="topbar-actions">
+                        <button class="icon-action" id="navbarRefreshBtn" type="button" aria-label="Refresh">
+                            <i class="fas fa-rotate-right" aria-hidden="true"></i>
+                        </button>
+                        <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Switch theme" title="Switch theme">
+                            <i id="themeToggleIcon" class="fas fa-sun" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Wrapper -->
+        <div class="dashboard-wrapper">
+
+            <!-- Sidebar -->
+            <aside class="user-sidebar" id="userSidebar">
+                <div class="sidebar-content">
+                    <div class="sidebar-section-label">NAVIGATION</div>
+
+                    <nav class="sidebar-nav">
+                        <button class="sidebar-item active" data-section="dashboard" aria-selected="true">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard Overview</span>
+                        </button>
+                        <button class="sidebar-item" data-section="search" aria-selected="false">
+                            <i class="fas fa-search"></i>
+                            <span>Cargo Search &amp; View</span>
+                        </button>
+                        <button class="sidebar-item" data-section="tracking" aria-selected="false">
+                            <i class="fas fa-map-location-dot"></i>
+                            <span>Cargo Tracking</span>
+                        </button>
+                        <button class="sidebar-item" data-section="contract" aria-selected="false">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Contract Status</span>
+                        </button>
+                        <button class="sidebar-item" data-section="certificate" aria-selected="false">
+                            <i class="fas fa-shield-check"></i>
+                            <span>Certificate Verification</span>
+                        </button>
+                        <button class="sidebar-item" data-section="activity" aria-selected="false">
+                            <i class="fas fa-clock-rotate-left"></i>
+                            <span>Activity History</span>
+                        </button>
+                    </nav>
+
+                    <div class="sidebar-footer">
+                        <button class="sidebar-item logout-btn" id="logoutBtn" aria-label="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+
+                        <div class="sidebar-user" id="sidebarProfileTrigger" role="button" tabindex="0" aria-expanded="false" aria-controls="userProfileCard">
+                            <div class="user-avatar">
+                                <i class="fas fa-user" aria-hidden="true"></i>
+                            </div>
+                            <div class="sidebar-user-copy">
+                                <span class="sidebar-user-name" id="sidebarUserName">User</span>
+                                <span class="sidebar-user-role">Registered User</span>
+                            </div>
+                        </div>
+
+                        <div class="user-profile-card user-profile-card-main" id="userProfileCard" hidden>
+                            <div class="profile-card-title">User Details</div>
+                            <div class="profile-row">
+                                <span class="profile-label">Full Name</span>
+                                <strong id="profileFullName">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">Email</span>
+                                <strong id="profileEmail">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">User ID</span>
+                                <strong id="profileUserId">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">Role</span>
+                                <strong id="profileRole">Registered User</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="user-main-content">
+
+                <!-- =============================
+                     STEP 2: Dashboard Overview
+                ============================== -->
+                <section class="content-section active" id="dashboard-section">
+                    <div class="dashboard-header">
+                        <div>
+                            <div class="section-kicker">Step 2</div>
+                            <h2>Dashboard Overview</h2>
+                            <p>View your active shipments, recent cargo activity, and search for cargo quickly.</p>
+                        </div>
+                        <button class="btn btn-ghost" id="dashRefreshBtn">
+                            <i class="fas fa-rotate-right"></i> Refresh
+                        </button>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="dashboard-grid kpi-grid">
+                        <div class="stat-card kpi-card accent-amber">
+                            <div class="stat-head">
+                                <span class="kpi-label"><span class="kpi-dot"></span> Active Shipments</span>
+                                <i class="fas fa-ship"></i>
+                            </div>
+                            <p class="stat-value" id="kpi-active">3</p>
+                            <span class="stat-change positive">2 in transit</span>
+                            <div class="kpi-foot">Currently active cargo shipments</div>
+                        </div>
+
+                        <div class="stat-card kpi-card accent-teal">
+                            <div class="stat-head">
+                                <span class="kpi-label"><span class="kpi-dot"></span> Recent Cargo</span>
+                                <i class="fas fa-boxes-stacked"></i>
+                            </div>
+                            <p class="stat-value" id="kpi-recent">5</p>
+                            <span class="stat-change positive">+1 this week</span>
+                            <div class="kpi-foot">Total cargo registered under account</div>
+                        </div>
+
+                        <div class="stat-card kpi-card accent-green">
+                            <div class="stat-head">
+                                <span class="kpi-label"><span class="kpi-dot"></span> Contracts Active</span>
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <p class="stat-value" id="kpi-contracts">2</p>
+                            <span class="stat-change">1 pending approval</span>
+                            <div class="kpi-foot">Smart contract execution status</div>
+                        </div>
+
+                        <div class="stat-card kpi-card accent-rose">
+                            <div class="stat-head">
+                                <span class="kpi-label"><span class="kpi-dot"></span> Certificates</span>
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <p class="stat-value" id="kpi-certs">4</p>
+                            <span class="stat-change positive">All valid</span>
+                            <div class="kpi-foot">Verified certificates on record</div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Split: Table + Quick Search -->
+                    <div class="dashboard-split">
+                        <section class="dashboard-panel dashboard-table-panel">
+                            <div class="panel-header">
+                                <div>
+                                    <div class="panel-kicker">Active Shipments</div>
+                                    <h3>Your Current Cargo</h3>
+                                </div>
+                                <button class="btn btn-ghost btn-sm" data-section="search" id="viewAllCargoBtn">
+                                    View All <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                            <div class="dashboard-table-wrap">
+                                <table class="tracking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cargo ID</th>
+                                            <th>Description</th>
+                                            <th>Route</th>
+                                            <th>Status</th>
+                                            <th>ETA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashCargoTableBody">
+                                        <tr>
+                                            <td><span class="job-id">CS-0001</span></td>
+                                            <td>
+                                                <strong>Electronics Components</strong>
+                                                <span>Oceanic Electronics Ltd.</span>
+                                            </td>
+                                            <td><span class="route-text">Shanghai → Karachi</span></td>
+                                            <td><span class="status-badge shipped">In Transit</span></td>
+                                            <td class="text-muted-sm">15 May 2025</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="job-id">CS-0002</span></td>
+                                            <td>
+                                                <strong>Textile Exports</strong>
+                                                <span>Textile Export Group</span>
+                                            </td>
+                                            <td><span class="route-text">Mumbai → Karachi</span></td>
+                                            <td><span class="status-badge complete">Arrived</span></td>
+                                            <td class="text-muted-sm">10 May 2025</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="job-id">CS-0003</span></td>
+                                            <td>
+                                                <strong>Heavy Machinery</strong>
+                                                <span>Delta Machinery Co.</span>
+                                            </td>
+                                            <td><span class="route-text">Dubai → Karachi</span></td>
+                                            <td><span class="status-badge queued">Registered</span></td>
+                                            <td class="text-muted-sm">22 May 2025</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <!-- Quick Search Panel -->
+                        <section class="dashboard-panel activity-panel">
+                            <div class="panel-header">
+                                <div>
+                                    <div class="panel-kicker">Quick Access</div>
+                                    <h3>Quick Search</h3>
+                                </div>
+                            </div>
+                            <div class="quick-search-box">
+                                <label class="form-group-label">Enter Cargo ID</label>
+                                <div class="search-input-wrap">
+                                    <input type="text" class="form-control" id="dashQuickSearchInput" placeholder="e.g. CS-0001">
+                                    <button class="btn btn-primary" id="dashQuickSearchBtn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <div id="dashQuickResult" class="quick-result" style="display:none;"></div>
+                            </div>
+
+                            <div class="panel-divider"></div>
+
+                            <div class="panel-header" style="margin-top:8px;">
+                                <div>
+                                    <div class="panel-kicker">Recent Activity</div>
+                                    <h3>Your Last Actions</h3>
+                                </div>
+                            </div>
+                            <div class="activity-list" id="dashActivityList">
+                                <div class="activity-item info-item">
+                                    <span class="activity-icon"><i class="fas fa-search"></i></span>
+                                    <div class="activity-copy">
+                                        <strong>Searched CS-0001</strong>
+                                        <span>Cargo Search &amp; View</span>
+                                    </div>
+                                    <span class="activity-time">2m ago</span>
+                                </div>
+                                <div class="activity-item warning-item">
+                                    <span class="activity-icon"><i class="fas fa-map-location-dot"></i></span>
+                                    <div class="activity-copy">
+                                        <strong>Tracked CS-0002</strong>
+                                        <span>Cargo Tracking</span>
+                                    </div>
+                                    <span class="activity-time">18m ago</span>
+                                </div>
+                                <div class="activity-item info-item">
+                                    <span class="activity-icon"><i class="fas fa-shield-check"></i></span>
+                                    <div class="activity-copy">
+                                        <strong>Verified PART-0088</strong>
+                                        <span>Certificate Verification</span>
+                                    </div>
+                                    <span class="activity-time">1h ago</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+
+                <!-- =============================
+                     STEP 3: Cargo Search & View
+                ============================== -->
+                <section class="content-section" id="search-section">
+                    <div class="section-header">
+                        <div class="section-kicker">Step 3</div>
+                        <h2>Cargo Search &amp; View</h2>
+                        <p>Search by Cargo ID to view details including supplier, type, status, and destination.</p>
+                    </div>
+
+                    <div class="form-container search-container">
+                        <div class="search-row">
+                            <div class="form-group flex-grow-1 mb-0">
+                                <label for="cargoSearchInput">
+                                    <i class="fas fa-barcode"></i> Cargo ID
+                                </label>
+                                <input type="text" class="form-control" id="cargoSearchInput" placeholder="Enter Cargo ID (e.g. CS-0001)">
+                            </div>
+                            <button class="btn btn-primary search-btn" id="cargoSearchBtn">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results Display -->
+                    <div id="searchResultArea" style="display:none;">
+                        <div class="result-card">
+                            <div class="result-card-header">
+                                <div>
+                                    <span class="result-kicker">Cargo Details</span>
+                                    <h3 id="resultCargoId" class="job-id result-id">--</h3>
+                                </div>
+                                <span id="resultStatusBadge" class="status-badge">--</span>
+                            </div>
+                            <div class="result-grid">
+                                <div class="result-field">
+                                    <span class="result-label"><i class="fas fa-building"></i> Supplier</span>
+                                    <span class="result-value" id="resultSupplier">--</span>
+                                </div>
+                                <div class="result-field">
+                                    <span class="result-label"><i class="fas fa-layer-group"></i> Type</span>
+                                    <span class="result-value" id="resultType">--</span>
+                                </div>
+                                <div class="result-field">
+                                    <span class="result-label"><i class="fas fa-plane-departure"></i> Origin</span>
+                                    <span class="result-value" id="resultOrigin">--</span>
+                                </div>
+                                <div class="result-field">
+                                    <span class="result-label"><i class="fas fa-plane-arrival"></i> Destination</span>
+                                    <span class="result-value" id="resultDestination">--</span>
+                                </div>
+                                <div class="result-field">
+                                    <span class="result-label"><i class="fas fa-calendar"></i> ETA</span>
+                                    <span class="result-value" id="resultEta">--</span>
+                                </div>
+                                <div class="result-field">
+                                    <span class="result-label"><i class="fas fa-weight-hanging"></i> Quantity</span>
+                                    <span class="result-value" id="resultQuantity">--</span>
+                                </div>
+                            </div>
+                            <div class="result-actions">
+                                <button class="btn btn-ghost" id="trackThisCargoBtn">
+                                    <i class="fas fa-map-location-dot"></i> Track this Cargo
+                                </button>
+                                <button class="btn btn-ghost" id="viewContractBtn">
+                                    <i class="fas fa-file-contract"></i> View Contract Status
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="searchNoResult" class="no-result" style="display:none;">
+                        <i class="fas fa-search-minus"></i>
+                        <p>No cargo found with that ID. Please check and try again.</p>
+                    </div>
+
+                    <!-- All Cargo Table -->
+                    <div class="dashboard-panel" style="margin-top:16px;">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker">All Records</div>
+                                <h3>Your Cargo List</h3>
+                            </div>
+                        </div>
+                        <div class="dashboard-table-wrap">
+                            <table class="tracking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cargo ID</th>
+                                        <th>Supplier</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Destination</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allCargoTableBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =============================
+                     STEP 4: Cargo Tracking
+                ============================== -->
+                <section class="content-section" id="tracking-section">
+                    <div class="section-header">
+                        <div class="section-kicker">Step 4</div>
+                        <h2>Cargo Tracking</h2>
+                        <p>Enter a Cargo ID to view the full timeline: Registered, In Transit, Arrived, Verified, Completed.</p>
+                    </div>
+
+                    <div class="form-container search-container">
+                        <div class="search-row">
+                            <div class="form-group flex-grow-1 mb-0">
+                                <label for="trackingInput">
+                                    <i class="fas fa-barcode"></i> Cargo ID
+                                </label>
+                                <input type="text" class="form-control" id="trackingInput" placeholder="Enter Cargo ID (e.g. CS-0001)">
+                            </div>
+                            <button class="btn btn-primary search-btn" id="trackingSearchBtn">
+                                <i class="fas fa-map-location-dot"></i> Track
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="trackingResultArea" style="display:none;">
+                        <div class="tracking-card">
+                            <div class="tracking-card-header">
+                                <div>
+                                    <span class="result-kicker">Tracking Timeline</span>
+                                    <h3 id="trackingCargoId" class="job-id result-id">--</h3>
+                                </div>
+                                <span id="trackingCurrentStatus" class="status-badge">--</span>
+                            </div>
+
+                            <!-- Route Bar -->
+                            <div class="route-bar">
+                                <span class="route-city" id="trackOriginCity">Origin</span>
+                                <div class="route-line">
+                                    <div class="route-progress" id="routeProgressBar" style="width:0%"></div>
+                                    <i class="fas fa-ship route-ship" id="routeShipIcon"></i>
+                                </div>
+                                <span class="route-city" id="trackDestCity">Destination</span>
+                            </div>
+
+                            <!-- Timeline Steps -->
+                            <div class="timeline-steps" id="trackingTimeline">
+                                <div class="timeline-step" data-step="registered">
+                                    <div class="step-icon"><i class="fas fa-clipboard-check"></i></div>
+                                    <div class="step-body">
+                                        <span class="step-label">Registered</span>
+                                        <span class="step-date" id="step-registered-date">-</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-step" data-step="in-transit">
+                                    <div class="step-icon"><i class="fas fa-ship"></i></div>
+                                    <div class="step-body">
+                                        <span class="step-label">In Transit</span>
+                                        <span class="step-date" id="step-transit-date">-</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-step" data-step="arrived">
+                                    <div class="step-icon"><i class="fas fa-anchor"></i></div>
+                                    <div class="step-body">
+                                        <span class="step-label">Arrived</span>
+                                        <span class="step-date" id="step-arrived-date">-</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-step" data-step="verified">
+                                    <div class="step-icon"><i class="fas fa-shield-check"></i></div>
+                                    <div class="step-body">
+                                        <span class="step-label">Verified</span>
+                                        <span class="step-date" id="step-verified-date">-</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-connector"></div>
+                                <div class="timeline-step" data-step="completed">
+                                    <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
+                                    <div class="step-body">
+                                        <span class="step-label">Completed</span>
+                                        <span class="step-date" id="step-completed-date">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="trackingNoResult" class="no-result" style="display:none;">
+                        <i class="fas fa-location-crosshairs"></i>
+                        <p>No cargo found with that ID. Please verify the Cargo ID and try again.</p>
+                    </div>
+                </section>
+
+                <!-- =============================
+                     STEP 5: Smart Contract Status View
+                ============================== -->
+                <section class="content-section" id="contract-section">
+                    <div class="section-header">
+                        <div class="section-kicker">Step 5</div>
+                        <h2>Smart Contract Status View</h2>
+                        <p>Enter a Cargo ID to view approval status and payment status from the smart contract.</p>
+                    </div>
+
+                    <div class="form-container search-container">
+                        <div class="search-row">
+                            <div class="form-group flex-grow-1 mb-0">
+                                <label for="contractSearchInput">
+                                    <i class="fas fa-barcode"></i> Cargo ID
+                                </label>
+                                <input type="text" class="form-control" id="contractSearchInput" placeholder="Enter Cargo ID (e.g. CS-0001)">
+                            </div>
+                            <button class="btn btn-primary search-btn" id="contractSearchBtn">
+                                <i class="fas fa-file-contract"></i> View Status
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="contractResultArea" style="display:none;">
+                        <div class="contract-status-card">
+                            <div class="result-card-header">
+                                <div>
+                                    <span class="result-kicker">Contract Details</span>
+                                    <h3 id="contractCargoId" class="job-id result-id">--</h3>
+                                </div>
+                            </div>
+                            <div class="contract-status-grid">
+                                <div class="contract-status-block">
+                                    <div class="csb-icon approval-icon">
+                                        <i class="fas fa-user-check"></i>
+                                    </div>
+                                    <div class="csb-body">
+                                        <span class="csb-label">Customer Approval</span>
+                                        <span class="csb-value" id="contractApprovalStatus">--</span>
+                                    </div>
+                                </div>
+                                <div class="contract-status-block">
+                                    <div class="csb-icon payment-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="csb-body">
+                                        <span class="csb-label">Payment Status</span>
+                                        <span class="csb-value" id="contractPaymentStatus">--</span>
+                                    </div>
+                                </div>
+                                <div class="contract-status-block">
+                                    <div class="csb-icon date-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div class="csb-body">
+                                        <span class="csb-label">Contract Date</span>
+                                        <span class="csb-value" id="contractDate">--</span>
+                                    </div>
+                                </div>
+                                <div class="contract-status-block">
+                                    <div class="csb-icon type-icon">
+                                        <i class="fas fa-layer-group"></i>
+                                    </div>
+                                    <div class="csb-body">
+                                        <span class="csb-label">Contract Type</span>
+                                        <span class="csb-value" id="contractType">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="contractNoResult" class="no-result" style="display:none;">
+                        <i class="fas fa-file-circle-xmark"></i>
+                        <p>No contract found for this Cargo ID.</p>
+                    </div>
+
+                    <!-- All Contracts Table -->
+                    <div class="dashboard-panel" style="margin-top:16px;">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker">Overview</div>
+                                <h3>All Contract Records</h3>
+                            </div>
+                        </div>
+                        <div class="dashboard-table-wrap">
+                            <table class="tracking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cargo ID</th>
+                                        <th>Contract Type</th>
+                                        <th>Approval</th>
+                                        <th>Payment</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allContractsTableBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =============================
+                     STEP 6: Certificate Verification
+                ============================== -->
+                <section class="content-section" id="certificate-section">
+                    <div class="section-header">
+                        <div class="section-kicker">Step 6</div>
+                        <h2>Certificate Verification</h2>
+                        <p>Navigate here, enter a Part ID, and verify certificate authenticity — view Valid/Invalid status and certificate details.</p>
+                    </div>
+
+                    <div class="form-container search-container">
+                        <div class="search-row">
+                            <div class="form-group flex-grow-1 mb-0">
+                                <label for="certPartInput">
+                                    <i class="fas fa-hashtag"></i> Part ID
+                                </label>
+                                <input type="text" class="form-control" id="certPartInput" placeholder="Enter Part ID (e.g. PART-0088)">
+                            </div>
+                            <button class="btn btn-primary search-btn" id="certVerifyBtn">
+                                <i class="fas fa-shield-check"></i> Verify
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="certResultArea" style="display:none;">
+                        <div class="cert-result-card" id="certResultCard">
+                            <div class="cert-verdict" id="certVerdict">
+                                <div class="cert-verdict-icon" id="certVerdictIcon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div>
+                                    <h3 id="certVerdictTitle">Certificate Valid</h3>
+                                    <p id="certVerdictSub">This part certificate has been verified successfully.</p>
+                                </div>
+                            </div>
+                            <div class="cert-details-grid">
+                                <div class="cert-detail-field">
+                                    <span class="result-label"><i class="fas fa-hashtag"></i> Part ID</span>
+                                    <span class="result-value" id="certPartId">--</span>
+                                </div>
+                                <div class="cert-detail-field">
+                                    <span class="result-label"><i class="fas fa-tag"></i> Part Name</span>
+                                    <span class="result-value" id="certPartName">--</span>
+                                </div>
+                                <div class="cert-detail-field">
+                                    <span class="result-label"><i class="fas fa-building"></i> Issuing Authority</span>
+                                    <span class="result-value" id="certAuthority">--</span>
+                                </div>
+                                <div class="cert-detail-field">
+                                    <span class="result-label"><i class="fas fa-calendar"></i> Issue Date</span>
+                                    <span class="result-value" id="certIssueDate">--</span>
+                                </div>
+                                <div class="cert-detail-field">
+                                    <span class="result-label"><i class="fas fa-calendar-xmark"></i> Expiry Date</span>
+                                    <span class="result-value" id="certExpiryDate">--</span>
+                                </div>
+                                <div class="cert-detail-field">
+                                    <span class="result-label"><i class="fas fa-layer-group"></i> Certificate Type</span>
+                                    <span class="result-value" id="certType">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="certNoResult" class="no-result" style="display:none;">
+                        <i class="fas fa-shield-xmark"></i>
+                        <p>No certificate found for that Part ID. Please check and try again.</p>
+                    </div>
+                </section>
+
+                <!-- =============================
+                     STEP 7: Activity History
+                ============================== -->
+                <section class="content-section" id="activity-section">
+                    <div class="section-header">
+                        <div class="section-kicker">Step 7</div>
+                        <h2>Activity History</h2>
+                        <p>View your searched cargo and tracked shipments history.</p>
+                    </div>
+
+                    <div class="activity-filters form-container" style="padding:14px 18px;">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Filter by Type</label>
+                                <select class="form-control" id="activityTypeFilter">
+                                    <option value="all">All Activities</option>
+                                    <option value="search">Cargo Searches</option>
+                                    <option value="tracking">Tracking Lookups</option>
+                                    <option value="contract">Contract Views</option>
+                                    <option value="certificate">Certificate Verifications</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-ghost" id="clearHistoryBtn">
+                                <i class="fas fa-trash-alt"></i> Clear History
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-panel" style="margin-top:12px;">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker">History Log</div>
+                                <h3>All Activities</h3>
+                            </div>
+                            <span class="activity-count-badge" id="activityCountBadge">0 entries</span>
+                        </div>
+                        <div class="activity-list full-activity-list" id="fullActivityList">
+                            <!-- Populated by JS -->
+                            <div class="no-activity" id="noActivityMsg">
+                                <i class="fas fa-history"></i>
+                                <p>No activity recorded yet. Start by searching for cargo or tracking a shipment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main><!-- /user-main-content -->
+        </div><!-- /dashboard-wrapper -->
+    </div><!-- /user-container -->
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/user-dashboard.js"></script>
+</body>
+</html>

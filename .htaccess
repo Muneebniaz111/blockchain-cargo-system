@@ -1,0 +1,41 @@
+# ===================================
+# SHIPYARD CARGO MANAGEMENT - .htaccess
+# Place this file at your Apache DocumentRoot (the Code/ folder).
+# REQUIREMENT: Apache mod_headers must be enabled.
+#   - XAMPP: Uncomment "LoadModule headers_module modules/mod_headers.so" in httpd.conf
+#   - WAMP:  Enable mod_headers via the WAMP tray icon > Apache > Apache modules
+#   - Linux: Run "sudo a2enmod headers && sudo systemctl restart apache2"
+# ===================================
+
+# Guard: only apply Header directives if mod_headers is loaded
+<IfModule mod_headers.c>
+
+    # Disable caching for CSS and JS files to ensure fresh loads
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "max-age=0, no-store, no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </FilesMatch>
+
+    # Disable caching for HTML files
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "max-age=0, no-store, no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </FilesMatch>
+
+    # Allow long-term caching for static assets
+    <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public"
+        Header set Expires "+1 year"
+    </FilesMatch>
+
+</IfModule>
+
+# ===================================
+# VERIFY YOUR SETUP:
+# Open browser DevTools > Network tab > click any .css or .js file.
+# The Response Headers should show:
+#   Cache-Control: max-age=0, no-store, no-cache, must-revalidate
+# If you see nothing or "max-age=..." with a large value, mod_headers is not active.
+# ===================================

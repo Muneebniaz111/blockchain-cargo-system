@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shipyard_PK Cargo Management - Admin Login">
+    <meta name="theme-color" content="#0E4C7C">
+    <title>Admin Login - Shipyard Cargo Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../Css/admin-login.css" rel="stylesheet">
+</head>
+<body class="admin-login-body">
+    <!-- Main Login Container -->
+    <div class="admin-login-container">
+        <!-- Anchor Icon Inside Card -->
+        <a href="../Html/index.html" class="card-logo-wrapper" title="Back to Home">
+            <img src="../Assest/anchor_icon.png" alt="Shipyard_PK Logo" class="card-logo">
+        </a>
+        <!-- Left Side - Information -->
+        <div class="admin-login-left">
+            <div class="left-content">
+                <h1 class="left-title">
+                    Admin Control Panel
+                </h1>
+                <p class="left-description">
+                    Access the administrative dashboard to manage users, cargo shipments, verify blockchain records, and oversee all system operations. Only authorized administrators with valid credentials may proceed.
+                </p>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Manage system users</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-box-open"></i>
+                        <span>Monitor cargo operations</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>View system analytics</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Security & compliance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Admin Login Form -->
+        <div class="admin-login-right">
+            <div class="admin-login-form-wrapper">
+                <h2 class="admin-login-title">
+                    <i class="fas fa-lock"></i> Admin Login
+                </h2>
+
+                <!-- Alert Messages -->
+                <div id="alert-container"></div>
+
+                <p class="admin-notice">
+                    <i class="fas fa-info-circle"></i> Unauthorized access attempts are logged and monitored.
+                </p>
+
+                <p class="admin-demo-creds">
+                    <i class="fas fa-key"></i> Default: muneeb@shipyard.pk / Admin@Muneeb2024
+                </p>
+
+                <form id="adminLoginForm" method="POST" action="#" class="admin-login-form" novalidate>
+                    <!-- Admin Email -->
+                    <div class="form-group">
+                        <label for="adminEmail">
+                            <i class="fas fa-envelope"></i> Admin Email
+                        </label>
+                        <input type="email" id="adminEmail" name="adminEmail" class="form-control" placeholder="admin@shipyard.pk" required>
+                        <small class="form-error" id="adminEmail-error"></small>
+                    </div>
+
+                    <!-- Admin Password -->
+                    <div class="form-group">
+                        <label for="adminPassword">
+                            <i class="fas fa-key"></i> Admin Password
+                        </label>
+                        <input type="password" id="adminPassword" name="adminPassword" class="form-control" placeholder="••••••••" required>
+                        <small class="form-error" id="adminPassword-error"></small>
+                    </div>
+
+                    <!-- Two-Factor Authentication (Future) -->
+                    <div class="form-group info-box">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Two-factor authentication will be enabled for all admin accounts</span>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn-admin-login">Authenticate</button>
+                </form>
+
+                <!-- Back Links -->
+                <div class="back-links">
+                    <p>
+                        <a href="login.html" class="back-to-user">
+                            <i class="fas fa-arrow-left"></i> Back to User Login
+                        </a>
+                    </p>
+                    <p>
+                        <a href="index.html" class="back-to-home">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/admin-login.js"></script>
+</body>
+</html>

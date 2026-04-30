@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shipyard_PK Cargo Management - User Signup">
+    <meta name="theme-color" content="#0E4C7C">
+    <title>Sign Up - Shipyard Cargo Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../Css/signup.css" rel="stylesheet">
+</head>
+<body class="signup-body">
+    <!-- Main Signup Container -->
+    <div class="signup-container">
+        <!-- Anchor Icon Inside Card -->
+        <a href="../Html/index.html" class="card-logo-wrapper" title="Back to Home">
+            <img src="../Assest/anchor_icon.png" alt="Shipyard_PK Logo" class="card-logo">
+        </a>
+        <!-- Left Side - Information -->
+        <div class="signup-left">
+            <div class="left-content">
+                <h1 class="left-title">
+                    Welcome to the Blockchain-Powered Cargo Management System
+                </h1>
+                <p class="left-description">
+                    An innovative digital solution designed to transform the way Pakistan's shipyard Ltd handles cargo registration, tracking, and verification. Our mission is to bring greater transparency, security, and efficiency to Pakistan's maritime logistics through modern technology.
+                </p>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Real-time cargo tracking</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Blockchain-verified records</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Secure smart contracts</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Complete audit trails</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Signup Form -->
+        <div class="signup-right">
+            <div class="signup-form-wrapper">
+                <h2 class="signup-title">Sign Up</h2>
+
+                <!-- Alert Messages -->
+                <div id="alert-container"></div>
+
+                <form id="signupForm" method="POST" class="signup-form">
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Your full name" required>
+                        <small class="form-error" id="fullName-error"></small>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="your.email@example.com" required>
+                        <small class="form-error" id="email-error"></small>
+                    </div>
+
+                    <!-- Contact Number -->
+                    <div class="form-group">
+                        <label for="contactNumber">Contact Number</label>
+                        <input type="tel" id="contactNumber" name="contactNumber" class="form-control" placeholder="+92 300 1234567" required>
+                        <small class="form-error" id="contactNumber-error"></small>
+                    </div>
+
+                    <!-- CNIC -->
+                    <div class="form-group">
+                        <label for="cnic">CNIC</label>
+                        <input type="text" id="cnic" name="cnic" class="form-control" placeholder="12345-6789012-3" required>
+                        <small class="form-error" id="cnic-error"></small>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                        <small class="form-error" id="password-error"></small>
+                        <small class="form-hint">Minimum 8 characters, with uppercase, lowercase, and numbers</small>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required>
+                        <small class="form-error" id="confirmPassword-error"></small>
+                    </div>
+
+                    <!-- Register Button -->
+                    <button type="submit" class="btn-register">Register</button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <!-- Google Login -->
+                <div class="social-login">
+                    <button type="button" class="btn-google" id="googleLoginBtn">
+                        <i class="fab fa-google"></i>
+                        <span>Google</span>
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="login-link">
+                    <p>If you already have an account, <a href="login.html">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/signup.js"></script>
+</body>
+</html>
