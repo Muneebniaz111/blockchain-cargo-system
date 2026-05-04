@@ -170,12 +170,18 @@ const userState = {
 /* ===================================
    BOOT
    =================================== */
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+    // ── Server-side session verification (route protection) ──
+    const sessionOk = await ensureUserSession();
+    if (!sessionOk) {
+        return; // redirect already fired
+    }
+
+    await loadUserProfile(); // Await to ensure user data is loaded first
     initSidebarNavigation();
     initMobileMenu();
     initThemeSwitcher();
     initLogout();
-    loadUserProfile();
     initSidebarProfileCard();
     initDashboardSection();
     initCargoSearch();
@@ -186,6 +192,30 @@ document.addEventListener('DOMContentLoaded', function () {
     populateAllCargoTable();
     populateAllContractsTable();
 });
+
+/* ===================================
+   ROUTE PROTECTION — server-side session check
+   =================================== */
+async function ensureUserSession() {
+    try {
+        const resp = await fetch('../PHP/check_user_session.php', {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store'
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.authenticated) {
+                return true;
+            }
+        }
+    } catch (e) {
+        console.warn('Session check failed:', e);
+    }
+    // Not authenticated — redirect to login
+    window.location.replace('login.html');
+    return false;
+}
 
 /* ===================================
    SIDEBAR NAVIGATION
@@ -339,10 +369,15 @@ function initThemeSwitcher() {
 function initLogout() {
     const btn = document.getElementById('logoutBtn');
     if (btn) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await fetch('../PHP/user_logout.php', { method: 'POST', credentials: 'same-origin' });
+                } catch (e) {
+                    console.warn('Logout request failed, redirecting anyway.');
+                }
                 localStorage.removeItem('userSession');
-                window.location.href = 'login.html';
+                window.location.replace('login.html');
             }
         });
     }
@@ -350,8 +385,41 @@ function initLogout() {
 
 /* ===================================
    USER PROFILE
+   Fetches the currently logged-in user's
+   profile from the server session
    =================================== */
-function loadUserProfile() {
+async function loadUserProfile() {
+    try {
+        const resp = await fetch('../PHP/get_user_profile.php', {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store'
+        });
+
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.success && data.data) {
+                // Update userState with fetched data
+                userState.user = {
+                    fullName: data.data.fullName,
+                    email: data.data.email,
+                    userId: data.data.userId,
+                    role: data.data.role
+                };
+            } else {
+                console.error('Failed to load user profile:', data.message);
+                return;
+            }
+        } else {
+            console.error('Profile fetch failed with status:', resp.status);
+            return;
+        }
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        return;
+    }
+
+    // Display fetched user data in the UI
     const u = userState.user;
 
     const nameEl = document.getElementById('sidebarUserName');

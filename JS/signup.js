@@ -5,7 +5,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     const signupForm = document.getElementById('signupForm');
-    const googleLoginBtn = document.getElementById('googleLoginBtn');
     const alertContainer = document.getElementById('alert-container');
 
     // Form fields
@@ -19,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Form validation patterns
     const patterns = {
         fullName: /^[a-zA-Z\s]{3,50}$/,
-        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        email: /^[a-zA-Z0-9._%+\-]+@shipyard\.pk$/,
         contactNumber: /^(\+92|0)[0-9]{10}$/,
         cnic: /^\d{5}-\d{7}-\d{1}$/,
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
@@ -59,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
         if (!patterns.email.test(value)) {
-            showError('email', 'Please enter a valid email address');
+            showError('email', 'Only @shipyard.pk email addresses are accepted');
             return false;
         }
         clearError('email');
@@ -181,12 +180,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (data.success) {
-                showAlert(data.message || 'Account created successfully!', 'success');
+                // Show pending approval message — no redirect, user must wait for admin
+                showPendingMessage(data.message || 'Your registration is pending admin approval.');
                 signupForm.reset();
-                // Redirect after 2 seconds
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
+            } else if (data.status === 'already_pending') {
+                showAlert(data.message || 'A registration with this email or CNIC is already pending.', 'warning');
             } else {
                 showAlert(data.message || 'An error occurred during registration', 'danger');
             }
@@ -198,12 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
             submitButton.disabled = false;
             submitButton.textContent = originalText;
         }
-    });
-
-    // Google Login Button
-    googleLoginBtn.addEventListener('click', function () {
-        showAlert('Google login integration will be configured by your admin', 'warning');
-        // TODO: Implement Google OAuth flow
     });
 
     // Show alert message
@@ -224,6 +216,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert.remove();
             }
         }, 5000);
+    }
+
+    // Show a persistent pending-approval banner
+    function showPendingMessage(message) {
+        alertContainer.innerHTML = `
+            <div class="alert alert-pending-approval" role="alert" style="
+                background: linear-gradient(135deg, #eaf6fb, #dff0f5);
+                border: 1px solid #9dd9e8;
+                border-left: 4px solid #17A2B8;
+                border-radius: 8px;
+                padding: 1rem 1.2rem;
+                color: #0c4a6e;
+                font-size: 0.88rem;
+                line-height: 1.6;
+            ">
+                <div style="display:flex;align-items:flex-start;gap:0.7rem;">
+                    <i class="fas fa-hourglass-half" style="color:#17A2B8;font-size:1.1rem;margin-top:2px;flex-shrink:0;"></i>
+                    <div>
+                        <strong style="display:block;margin-bottom:0.25rem;font-size:0.92rem;color:#0c4a6e;">
+                            Registration Submitted
+                        </strong>
+                        <span style="color:#155e75;">${message}</span>
+                        <div style="margin-top:0.6rem;font-size:0.8rem;color:#1e7a91;">
+                            Once approved, you can <a href="login.html" style="color:#0E4C7C;font-weight:600;text-decoration:underline;">log in here</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        // Scroll to message
+        alertContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     // Real-time password confirmation check

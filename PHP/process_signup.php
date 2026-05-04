@@ -1,180 +1,148 @@
 <?php
 /* ===================================
-   SIGNUP FORM PROCESSING
-   Form Validation & Database Insert
+   SIGNUP — Creates a PENDING registration
+   request (not a live user account).
+   Admin must approve before user can log in.
    =================================== */
 
 header('Content-Type: application/json');
-
-// Start session
 session_start();
-
-// Include database configuration
 require_once 'config.php';
 
-// Initialize response array
-$response = [
-    'success' => false,
-    'message' => '',
-    'errors' => []
-];
+$response = ['success' => false, 'message' => '', 'errors' => [], 'status' => ''];
 
-// Check if request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method';
     echo json_encode($response);
     exit();
 }
 
-// Get and sanitize input data
-$fullName = trim($_POST['fullName'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$contactNumber = trim($_POST['contactNumber'] ?? '');
-$cnic = trim($_POST['cnic'] ?? '');
-$password = $_POST['password'] ?? '';
-$confirmPassword = $_POST['confirmPassword'] ?? '';
+// ── Sanitize ──────────────────────────────────────────────
+$fullName        = trim($_POST['fullName']       ?? '');
+$email           = strtolower(trim($_POST['email'] ?? ''));
+$contactNumber   = trim($_POST['contactNumber']  ?? '');
+$cnic            = trim($_POST['cnic']           ?? '');
+$password        = $_POST['password']            ?? '';
+$confirmPassword = $_POST['confirmPassword']     ?? '';
 
-// Validation function
-function validate_input($data) {
-    $errors = [];
+// ── Validation ────────────────────────────────────────────
+$errors = [];
 
-    // Validate Full Name
-    if (empty($data['fullName'])) {
-        $errors['fullName'] = 'Full name is required';
-    } elseif (!preg_match('/^[a-zA-Z\s]{3,50}$/', $data['fullName'])) {
-        $errors['fullName'] = 'Name must be 3-50 characters and contain only letters';
-    }
-
-    // Validate Email
-    if (empty($data['email'])) {
-        $errors['email'] = 'Email is required';
-    } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'Invalid email format';
-    }
-
-    // Validate Contact Number
-    if (empty($data['contactNumber'])) {
-        $errors['contactNumber'] = 'Contact number is required';
-    } elseif (!preg_match('/^(\+92|0)[0-9]{10}$/', $data['contactNumber'])) {
-        $errors['contactNumber'] = 'Invalid Pakistani phone number format';
-    }
-
-    // Validate CNIC
-    if (empty($data['cnic'])) {
-        $errors['cnic'] = 'CNIC is required';
-    } elseif (!preg_match('/^\d{5}-\d{7}-\d{1}$/', $data['cnic'])) {
-        $errors['cnic'] = 'Invalid CNIC format (12345-6789012-3)';
-    }
-
-    // Validate Password
-    if (empty($data['password'])) {
-        $errors['password'] = 'Password is required';
-    } elseif (strlen($data['password']) < 8) {
-        $errors['password'] = 'Password must be at least 8 characters';
-    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/', $data['password'])) {
-        $errors['password'] = 'Password must contain uppercase, lowercase, and numbers';
-    }
-
-    // Validate Confirm Password
-    if (empty($data['confirmPassword'])) {
-        $errors['confirmPassword'] = 'Please confirm your password';
-    } elseif ($data['password'] !== $data['confirmPassword']) {
-        $errors['confirmPassword'] = 'Passwords do not match';
-    }
-
-    return $errors;
+if (empty($fullName)) {
+    $errors['fullName'] = 'Full name is required';
+} elseif (!preg_match('/^[a-zA-Z\s]{3,50}$/', $fullName)) {
+    $errors['fullName'] = 'Name must be 3-50 characters, letters only';
 }
 
-// Validate inputs
-$validation_errors = validate_input([
-    'fullName' => $fullName,
-    'email' => $email,
-    'contactNumber' => $contactNumber,
-    'cnic' => $cnic,
-    'password' => $password,
-    'confirmPassword' => $confirmPassword
-]);
-
-if (!empty($validation_errors)) {
-    $response['errors'] = $validation_errors;
-    $response['message'] = 'Validation failed. Please check your inputs.';
-    echo json_encode($response);
-    exit();
+if (empty($email)) {
+    $errors['email'] = 'Email is required';
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors['email'] = 'Invalid email format';
+} elseif (!preg_match('/^[a-zA-Z0-9._%+\-]+@shipyard\.pk$/i', $email)) {
+    $errors['email'] = 'Only @shipyard.pk email addresses are accepted';
 }
 
-// Check if email already exists
-$check_email_query = "SELECT id FROM users WHERE email = ?";
-$check_stmt = $mysqli->prepare($check_email_query);
-if (!$check_stmt) {
-    $response['message'] = 'Database error: ' . $mysqli->error;
-    echo json_encode($response);
-    exit();
+if (empty($contactNumber)) {
+    $errors['contactNumber'] = 'Contact number is required';
+} elseif (!preg_match('/^(\+92|0)[0-9]{10}$/', $contactNumber)) {
+    $errors['contactNumber'] = 'Please enter a valid Pakistani phone number (+92300... or 03...)';
 }
 
-$check_stmt->bind_param('s', $email);
-$check_stmt->execute();
-$check_result = $check_stmt->get_result();
-
-if ($check_result->num_rows > 0) {
-    $response['errors']['email'] = 'Email already registered';
-    $response['message'] = 'This email is already associated with an account.';
-    echo json_encode($response);
-    exit();
-}
-$check_stmt->close();
-
-// Check if CNIC already exists
-$check_cnic_query = "SELECT id FROM users WHERE cnic = ?";
-$check_cnic_stmt = $mysqli->prepare($check_cnic_query);
-if (!$check_cnic_stmt) {
-    $response['message'] = 'Database error: ' . $mysqli->error;
-    echo json_encode($response);
-    exit();
-}
-
-$check_cnic_stmt->bind_param('s', $cnic);
-$check_cnic_stmt->execute();
-$check_cnic_result = $check_cnic_stmt->get_result();
-
-if ($check_cnic_result->num_rows > 0) {
-    $response['errors']['cnic'] = 'CNIC already registered';
-    $response['message'] = 'This CNIC is already associated with an account.';
-    echo json_encode($response);
-    exit();
-}
-$check_cnic_stmt->close();
-
-// Hash password using bcrypt
-$hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
-
-// Prepare insert statement
-$insert_query = "INSERT INTO users (full_name, email, contact_number, cnic, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())";
-$insert_stmt = $mysqli->prepare($insert_query);
-
-if (!$insert_stmt) {
-    $response['message'] = 'Database error: ' . $mysqli->error;
-    echo json_encode($response);
-    exit();
-}
-
-// Bind parameters
-$insert_stmt->bind_param('sssss', $fullName, $email, $contactNumber, $cnic, $hashed_password);
-
-// Execute query
-if ($insert_stmt->execute()) {
-    $response['success'] = true;
-    $response['message'] = 'Account created successfully! You can now login.';
-    
-    // Log successful registration (optional)
-    error_log('New user registered: ' . $email);
+if (empty($cnic)) {
+    $errors['cnic'] = 'CNIC is required';
+} elseif (!preg_match('/^\d{5}-\d{7}-\d{1}$/', $cnic)) {
+    $errors['cnic'] = 'CNIC format: 12345-6789012-3';
 } else {
-    $response['message'] = 'Error creating account: ' . $insert_stmt->error;
-    error_log('Registration error: ' . $insert_stmt->error);
+    $digits = preg_replace('/[^0-9]/', '', $cnic);
+    if (strlen($digits) !== 13) {
+        $errors['cnic'] = 'CNIC must contain exactly 13 digits';
+    }
 }
 
-$insert_stmt->close();
+if (empty($password)) {
+    $errors['password'] = 'Password is required';
+} elseif (strlen($password) < 8) {
+    $errors['password'] = 'Password must be at least 8 characters';
+} elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/', $password)) {
+    $errors['password'] = 'Password must contain uppercase, lowercase, and a number';
+}
+
+if (empty($confirmPassword)) {
+    $errors['confirmPassword'] = 'Please confirm your password';
+} elseif ($password !== $confirmPassword) {
+    $errors['confirmPassword'] = 'Passwords do not match';
+}
+
+if (!empty($errors)) {
+    $response['errors']  = $errors;
+    $response['message'] = 'Please fix the errors above.';
+    echo json_encode($response);
+    exit();
+}
+
+// ── Duplicate checks — scan BOTH users and pending requests ──
+// Check users table
+$chk = $mysqli->prepare("SELECT id FROM users WHERE email = ? OR cnic = ? LIMIT 1");
+$chk->bind_param('ss', $email, $cnic);
+$chk->execute();
+$chk->store_result();
+if ($chk->num_rows > 0) {
+    $response['message'] = 'An account with this email or CNIC already exists.';
+    $chk->close();
+    echo json_encode($response);
+    exit();
+}
+$chk->close();
+
+// Check pending requests (avoid duplicate pending requests)
+$chkPending = $mysqli->prepare(
+    "SELECT id, status FROM registration_requests
+     WHERE (email = ? OR cnic = ?) AND status = 'pending'
+     LIMIT 1"
+);
+$chkPending->bind_param('ss', $email, $cnic);
+$chkPending->execute();
+$pendingResult = $chkPending->get_result();
+if ($pendingResult->num_rows > 0) {
+    $response['success'] = false;
+    $response['status']  = 'already_pending';
+    $response['message'] = 'A registration request with this email or CNIC is already pending admin approval. Please wait.';
+    $chkPending->close();
+    echo json_encode($response);
+    exit();
+}
+$chkPending->close();
+
+// Also check if email/cnic was previously rejected (allow re-submission)
+// No block needed — rejected users may re-apply
+
+// ── Store as PENDING registration request ──────────────────
+$passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+$ipAddress    = $_SERVER['REMOTE_ADDR'] ?? '';
+
+$ins = $mysqli->prepare(
+    "INSERT INTO registration_requests
+     (full_name, email, contact_number, cnic, password_hash, status, ip_address, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, 'pending', ?, NOW(), NOW())"
+);
+if (!$ins) {
+    $response['message'] = 'Database error. Please try again.';
+    echo json_encode($response);
+    exit();
+}
+$ins->bind_param('ssssss', $fullName, $email, $contactNumber, $cnic, $passwordHash, $ipAddress);
+
+if ($ins->execute()) {
+    $response['success'] = true;
+    $response['status']  = 'pending';
+    $response['message'] = 'Your registration request has been submitted and is pending admin approval. You will be able to log in once your account is approved.';
+    error_log('[SIGNUP_PENDING] Registration request submitted: ' . $email);
+} else {
+    $response['message'] = 'Error submitting request. Please try again.';
+    error_log('[SIGNUP_ERROR] ' . $ins->error . ' for: ' . $email);
+}
+$ins->close();
 $mysqli->close();
 
-// Send response
 echo json_encode($response);
 ?>

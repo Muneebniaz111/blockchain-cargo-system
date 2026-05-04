@@ -1,16 +1,36 @@
 # ===================================
-# SHIPYARD CARGO MANAGEMENT - .htaccess
-# Place this file at your Apache DocumentRoot (the Code/ folder).
-# REQUIREMENT: Apache mod_headers must be enabled.
-#   - XAMPP: Uncomment "LoadModule headers_module modules/mod_headers.so" in httpd.conf
-#   - WAMP:  Enable mod_headers via the WAMP tray icon > Apache > Apache modules
-#   - Linux: Run "sudo a2enmod headers && sudo systemctl restart apache2"
+# SHIPYARD CARGO MANAGEMENT — .htaccess
+# Security + Caching configuration
 # ===================================
 
-# Guard: only apply Header directives if mod_headers is loaded
+# ── PHP Dashboards: protect via PHP session guard ──────────────────────────
+# HTML files cannot use PHP directly, but PHP session checks are done via
+# JS fetch() calls to check_user_session.php / check_admin_session.php
+# which redirect unauthenticated users immediately on page load.
+
+# ── Block direct access to PHP scripts from the browser ───────────────────
+# Only AJAX calls from trusted HTML pages should reach these files.
+<FilesMatch "^(config|seed_admins|generate_admin_hashes)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── Security headers ──────────────────────────────────────────────────────
 <IfModule mod_headers.c>
 
-    # Disable caching for CSS and JS files to ensure fresh loads
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking
+    Header always set X-Frame-Options "DENY"
+
+    # Enable XSS protection in legacy browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Disable caching for CSS and JS files (dev / fresh load)
     <FilesMatch "\.(css|js)$">
         Header set Cache-Control "max-age=0, no-store, no-cache, must-revalidate"
         Header set Pragma "no-cache"
@@ -24,7 +44,13 @@
         Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
     </FilesMatch>
 
-    # Allow long-term caching for static assets
+    # Disable caching for PHP API responses
+    <FilesMatch "\.php$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+
+    # Long-term caching for static assets (images, fonts)
     <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
         Header set Cache-Control "max-age=31536000, public"
         Header set Expires "+1 year"
@@ -32,10 +58,11 @@
 
 </IfModule>
 
-# ===================================
-# VERIFY YOUR SETUP:
-# Open browser DevTools > Network tab > click any .css or .js file.
-# The Response Headers should show:
-#   Cache-Control: max-age=0, no-store, no-cache, must-revalidate
-# If you see nothing or "max-age=..." with a large value, mod_headers is not active.
-# ===================================
+# ── Disable directory listing ──────────────────────────────────────────────
+Options -Indexes
+
+# ── Prevent access to hidden files ────────────────────────────────────────
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

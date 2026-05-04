@@ -1,124 +1,153 @@
 <?php
 /* ===================================
-   LOGIN FORM PROCESSING
-   User Authentication
+   USER LOGIN — checks approval status
+   Only approved (active) users can log in.
+   Pending / rejected users get clear feedback.
    =================================== */
 
 header('Content-Type: application/json');
-
-// Start session
 session_start();
-
-// Include database configuration
 require_once 'config.php';
 
-// Initialize response array
-$response = [
-    'success' => false,
-    'message' => ''
-];
+$response = ['success' => false, 'message' => '', 'status' => ''];
 
-// Check if request method is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method';
     echo json_encode($response);
     exit();
 }
 
-// Get and sanitize input data
-$email = trim($_POST['email'] ?? '');
-$password = $_POST['password'] ?? '';
-$rememberMe = isset($_POST['rememberMe']) ? true : false;
+$email      = strtolower(trim($_POST['email']    ?? ''));
+$password   = $_POST['password']                  ?? '';
+$rememberMe = !empty($_POST['rememberMe']);
 
-// Basic validation
 if (empty($email) || empty($password)) {
     $response['message'] = 'Email and password are required';
     echo json_encode($response);
     exit();
 }
 
-// Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $response['message'] = 'Invalid email format';
     echo json_encode($response);
     exit();
 }
 
-// Query database for user
-$query = "SELECT id, full_name, email, password, is_active, is_verified FROM users WHERE email = ? LIMIT 1";
-$stmt = $mysqli->prepare($query);
-
-if (!$stmt) {
-    $response['message'] = 'Database error: ' . $mysqli->error;
+if (!preg_match('/^[a-zA-Z0-9._%+\-]+@shipyard\.pk$/i', $email)) {
+    $response['message'] = 'Only @shipyard.pk accounts can log in here';
     echo json_encode($response);
     exit();
 }
 
+// ── Check registration_requests first for clear feedback ──
+$chkReq = $mysqli->prepare(
+    "SELECT status FROM registration_requests
+     WHERE email = ?
+     ORDER BY created_at DESC
+     LIMIT 1"
+);
+if ($chkReq) {
+    $chkReq->bind_param('s', $email);
+    $chkReq->execute();
+    $reqResult = $chkReq->get_result();
+    if ($reqResult->num_rows > 0) {
+        $req = $reqResult->fetch_assoc();
+        if ($req['status'] === 'pending') {
+            $response['status']  = 'pending';
+            $response['message'] = 'Your account is pending admin approval. Please wait for the administrator to review your registration.';
+            $chkReq->close();
+            $mysqli->close();
+            echo json_encode($response);
+            exit();
+        }
+        if ($req['status'] === 'rejected') {
+            $response['status']  = 'rejected';
+            $response['message'] = 'Your registration request was not approved. Please contact the administrator for more information.';
+            $chkReq->close();
+            $mysqli->close();
+            echo json_encode($response);
+            exit();
+        }
+        // status = 'approved' — continue to normal login below
+    }
+    $chkReq->close();
+}
+
+// ── Normal login flow ──────────────────────────────────────
+$stmt = $mysqli->prepare(
+    "SELECT id, full_name, email, password, is_active, user_role
+     FROM users
+     WHERE email = ? AND user_role = 'user'
+     LIMIT 1"
+);
+if (!$stmt) {
+    $response['message'] = 'Database error';
+    echo json_encode($response);
+    exit();
+}
 $stmt->bind_param('s', $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    // Log failed login attempt
-    error_log('Failed login attempt for email: ' . $email);
     $response['message'] = 'Invalid email or password';
-    echo json_encode($response);
     $stmt->close();
+    $mysqli->close();
+    echo json_encode($response);
     exit();
 }
 
 $user = $result->fetch_assoc();
 $stmt->close();
 
-// Check if account is active
-if (!$user['is_active']) {
+if (!(bool)$user['is_active']) {
+    $response['status']  = 'inactive';
     $response['message'] = 'Your account has been deactivated. Please contact support.';
+    $mysqli->close();
     echo json_encode($response);
     exit();
 }
 
-// Verify password using bcrypt
 if (!password_verify($password, $user['password'])) {
-    // Log failed login attempt
-    error_log('Failed password verification for email: ' . $email);
     $response['message'] = 'Invalid email or password';
+    $mysqli->close();
     echo json_encode($response);
     exit();
 }
 
-// Check if email is verified (optional - comment out if not required)
-// if (!$user['is_verified']) {
-//     $response['message'] = 'Please verify your email before logging in.';
-//     echo json_encode($response);
-//     exit();
-// }
-
-// Update last login timestamp
-$update_query = "UPDATE users SET last_login = NOW() WHERE id = ?";
-$update_stmt = $mysqli->prepare($update_query);
-if ($update_stmt) {
-    $update_stmt->bind_param('i', $user['id']);
-    $update_stmt->execute();
-    $update_stmt->close();
+// ── Update last login ─────────────────────────────────────
+$upd = $mysqli->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+if ($upd) {
+    $upd->bind_param('i', $user['id']);
+    $upd->execute();
+    $upd->close();
 }
 
-// Create session
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['user_email'] = $user['email'];
-$_SESSION['user_name'] = $user['full_name'];
-$_SESSION['login_time'] = time();
+// ── Session ───────────────────────────────────────────────
+$_SESSION['user_id']         = (int)$user['id'];
+$_SESSION['user_email']      = $user['email'];
+$_SESSION['user_name']       = $user['full_name'];
+$_SESSION['user_role']       = 'user';
+$_SESSION['login_time']      = time();
+$_SESSION['user_agent_hash'] = hash('sha256', $_SERVER['HTTP_USER_AGENT'] ?? '');
 
-// Set remember me cookie (30 days)
+// ── Remember Me ───────────────────────────────────────────
 if ($rememberMe) {
-    setcookie('user_email', $email, time() + (30 * 24 * 60 * 60), '/');
+    setcookie('remember_user_email', $user['email'], [
+        'expires'  => time() + (30 * 24 * 60 * 60),
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+} else {
+    setcookie('remember_user_email', '', time() - 3600, '/');
 }
 
-// Log successful login
-error_log('Successful login for user: ' . $user['email']);
+$response['success']   = true;
+$response['status']    = 'approved';
+$response['message']   = 'Login successful! Redirecting...';
+$response['user_name'] = $user['full_name'];
 
-$response['success'] = true;
-$response['message'] = 'Login successful! Redirecting...';
-
-echo json_encode($response);
 $mysqli->close();
+echo json_encode($response);
 ?>

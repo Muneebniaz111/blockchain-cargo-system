@@ -6,13 +6,23 @@
     <meta name="description" content="Shipyard Cargo Management System - Blockchain-powered secure cargo tracking and supply chain management">
     <meta name="theme-color" content="#0E4C7C">
     <title>Shipyard Cargo Management System - Blockchain Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="../Css/styles.css" rel="stylesheet">
+    <style>
+        /* Critical: ensure navbar is flush to viewport top */
+        html, body { margin: 0; padding: 0; }
+        body { padding-top: 68px; }
+        nav.navbar { position: fixed; top: 0; left: 0; right: 0; margin: 0; }
+        @media (max-width: 768px) { body { padding-top: 60px; } }
+        @media (max-width: 576px) { body { padding-top: 56px; } }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light" role="navigation">
+    <nav class="navbar navbar-expand-lg navbar-light" role="navigation" style="top:0;margin-top:0;">
         <div class="container-fluid px-4 px-md-5">
             <a class="navbar-brand" href="index.html" aria-label="Shipyard_PK - Blockchain Cargo Management">
                 <img src="../Assest/anchor_icon.png" alt="Shipyard_PK Logo" class="navbar-logo">
@@ -39,13 +49,28 @@
             <!-- Hero Section -->
             <section class="hero-section" aria-labelledby="hero-title">
                 <div class="hero-content">
+                    <img src="../Assest/anchor_icon2.png" alt="Shipyard Logo" class="hero-icon">
+                    <div class="hero-divider"></div>
                     <h1 id="hero-title" class="hero-title">
-                        <img src="../Assest/anchor_icon2.png" alt="Shipyard Logo" class="hero-icon"> 
                         Shipyard Cargo Management System
                     </h1>
                     <p class="hero-subtitle">
                         Secure, transparent, and efficient cargo tracking powered by blockchain technology. Revolutionize your supply chain with real-time visibility, smart contracts, and immutable records for complete peace of mind.
                     </p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="hero-stat-num">500+</span>
+                            <span class="hero-stat-label">Cargo Tracked</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-num">99.9%</span>
+                            <span class="hero-stat-label">Uptime</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-num">24/7</span>
+                            <span class="hero-stat-label">Monitoring</span>
+                        </div>
+                    </div>
                     <div class="cta-buttons">
                         <a href="signup.html" class="btn-cta primary" role="button">
                             <i class="fas fa-user-plus"></i> <span>Get Started</span>
@@ -56,6 +81,30 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Features Strip -->
+            <div class="features-strip">
+                <div class="strip-item">
+                    <div class="strip-icon"><i class="fas fa-shield-halved"></i></div>
+                    <span class="strip-text">Blockchain Secured</span>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-icon"><i class="fas fa-map-location-dot"></i></div>
+                    <span class="strip-text">Real-Time Tracking</span>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-icon"><i class="fas fa-file-contract"></i></div>
+                    <span class="strip-text">Smart Contracts</span>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-icon"><i class="fas fa-clock-rotate-left"></i></div>
+                    <span class="strip-text">Audit Trails</span>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-icon"><i class="fas fa-lock"></i></div>
+                    <span class="strip-text">Role-Based Access</span>
+                </div>
+            </div>
 
             <!-- Features Section -->
             <section class="features-section" aria-labelledby="features-title">
@@ -151,31 +200,6 @@
                         Whether you're a shipping company protecting valuable cargo, a customs authority verifying authenticity, a port operator managing secure operations, or a logistics provider ensuring supply chain integrity, Shipyard_PK provides the comprehensive anti-tampering protection and blockchain verification you need to guarantee cargo security throughout the maritime supply chain.
                     </p>
                 </div>
-            </section>
-        </div>
-    </main>
-            </section>
-
-            <!-- About Portal Section -->
-            <section class="about-section">
-                <h2><i class="fas fa-info-circle"></i> About Shipyard_PK Platform</h2>
-                <p>
-                    The Shipyard_PK Cargo Management System is a revolutionary blockchain-based platform designed to ensure complete cargo integrity throughout the supply chain. Our primary mission is to guarantee that cargo cannot be tampered with at any stage of transit, using immutable distributed ledger technology, cryptographic verification, and comprehensive audit trails to provide absolute transparency and security.
-                </p>
-                <h4 class="about-subtitle"><i class="fas fa-trophy"></i> Why Choose Shipyard_PK?</h4>
-                <ul>
-                    <li><strong>Tamper-Proof Records:</strong> Immutable blockchain records ensure cargo cannot be altered at any stage of transportation</li>
-                    <li><strong>Real-Time Tracking:</strong> GPS-enabled tracking with blockchain verification prevents cargo diversion and unauthorized access</li>
-                    <li><strong>Smart Contracts:</strong> Automated, enforced agreements eliminate manual intervention and potential tampering points</li>
-                    <li><strong>Complete Audit Trails:</strong> Cryptographic audit logs verify every transaction and modification with forensic certainty</li>
-                    <li><strong>Role-Based Access:</strong> Admin and user permissions ensure only authorized personnel can view or modify cargo records</li>
-                    <li><strong>Cargo Verification:</strong> Blockchain-verified checkpoints at each stage validate cargo authenticity and integrity</li>
-                    <li><strong>Immutable Documentation:</strong> Digital certificates and manifests cannot be forged or altered once registered</li>
-                    <li><strong>24/7 Monitoring:</strong> Continuous system monitoring and alert mechanisms detect any attempted tampering immediately</li>
-                </ul>
-                <p style="margin-top: 2rem;">
-                    Whether you're a shipping company protecting valuable cargo, a customs authority verifying authenticity, a port operator managing secure operations, or a logistics provider ensuring supply chain integrity, Shipyard_PK provides the comprehensive anti-tampering protection and blockchain verification you need to guarantee cargo security throughout the maritime supply chain.
-                </p>
             </section>
         </div>
     </main>

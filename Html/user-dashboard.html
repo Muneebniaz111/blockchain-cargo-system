@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#0a2847">
     <title>User Dashboard - Shipyard Cargo Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="../Css/user-dashboard.css" rel="stylesheet">
 </head>
 <body>
@@ -60,27 +60,27 @@
                     <div class="sidebar-section-label">NAVIGATION</div>
 
                     <nav class="sidebar-nav">
-                        <button class="sidebar-item active" data-section="dashboard" aria-selected="true">
+                        <button class="sidebar-item active" data-section="dashboard" data-tooltip="Dashboard Overview" aria-selected="true">
                             <i class="fas fa-chart-line"></i>
                             <span>Dashboard Overview</span>
                         </button>
-                        <button class="sidebar-item" data-section="search" aria-selected="false">
+                        <button class="sidebar-item" data-section="search" data-tooltip="Cargo Search &amp; View" aria-selected="false">
                             <i class="fas fa-search"></i>
                             <span>Cargo Search &amp; View</span>
                         </button>
-                        <button class="sidebar-item" data-section="tracking" aria-selected="false">
+                        <button class="sidebar-item" data-section="tracking" data-tooltip="Cargo Tracking" aria-selected="false">
                             <i class="fas fa-map-location-dot"></i>
                             <span>Cargo Tracking</span>
                         </button>
-                        <button class="sidebar-item" data-section="contract" aria-selected="false">
+                        <button class="sidebar-item" data-section="contract" data-tooltip="Contract Status" aria-selected="false">
                             <i class="fas fa-file-contract"></i>
                             <span>Contract Status</span>
                         </button>
-                        <button class="sidebar-item" data-section="certificate" aria-selected="false">
-                            <i class="fas fa-shield-check"></i>
+                        <button class="sidebar-item" data-section="certificate" data-tooltip="Certificate Verification" aria-selected="false">
+                            <i class="fas fa-shield-halved"></i>
                             <span>Certificate Verification</span>
                         </button>
-                        <button class="sidebar-item" data-section="activity" aria-selected="false">
+                        <button class="sidebar-item" data-section="activity" data-tooltip="Activity History" aria-selected="false">
                             <i class="fas fa-clock-rotate-left"></i>
                             <span>Activity History</span>
                         </button>
@@ -290,7 +290,7 @@
                                     <span class="activity-time">18m ago</span>
                                 </div>
                                 <div class="activity-item info-item">
-                                    <span class="activity-icon"><i class="fas fa-shield-check"></i></span>
+                                    <span class="activity-icon"><i class="fas fa-shield-halved"></i></span>
                                     <div class="activity-copy">
                                         <strong>Verified PART-0088</strong>
                                         <span>Certificate Verification</span>
@@ -477,7 +477,7 @@
                                 </div>
                                 <div class="timeline-connector"></div>
                                 <div class="timeline-step" data-step="verified">
-                                    <div class="step-icon"><i class="fas fa-shield-check"></i></div>
+                                    <div class="step-icon"><i class="fas fa-shield-halved"></i></div>
                                     <div class="step-body">
                                         <span class="step-label">Verified</span>
                                         <span class="step-date" id="step-verified-date">-</span>
@@ -625,7 +625,7 @@
                                 <input type="text" class="form-control" id="certPartInput" placeholder="Enter Part ID (e.g. PART-0088)">
                             </div>
                             <button class="btn btn-primary search-btn" id="certVerifyBtn">
-                                <i class="fas fa-shield-check"></i> Verify
+                                <i class="fas fa-shield-halved"></i> Verify
                             </button>
                         </div>
                     </div>
@@ -671,7 +671,7 @@
                     </div>
 
                     <div id="certNoResult" class="no-result" style="display:none;">
-                        <i class="fas fa-shield-xmark"></i>
+                        <i class="fas fa-shield"></i>
                         <p>No certificate found for that Part ID. Please check and try again.</p>
                     </div>
                 </section>

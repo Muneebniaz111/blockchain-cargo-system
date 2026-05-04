@@ -207,7 +207,9 @@ html, body {
    =================================== */
 
 .admin-sidebar {
-    width: 280px;
+    width: max-content;
+    min-width: 200px;
+    max-width: 280px;
     background: rgba(13, 36, 56, 0.7);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 2px 0 30px rgba(0, 0, 0, 0.2);
@@ -871,6 +873,111 @@ body.light-theme .cargo-type-select select.form-control option {
 
 #cargoType.form-control::-webkit-scrollbar {
     width: 8px;
+}
+
+/* Origin and Destination Port Selects */
+.origin-select,
+.destination-select {
+    position: relative;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+body.light-theme .origin-select,
+body.light-theme .destination-select {
+    color: #000000;
+}
+
+.origin-select .origin-select-arrow,
+.destination-select .destination-select-arrow {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-65%) rotate(45deg);
+    transform-origin: center;
+    pointer-events: none;
+    transition: transform 0.18s ease, top 0.18s ease;
+}
+
+.origin-select.is-open .origin-select-arrow,
+.destination-select.is-open .destination-select-arrow {
+    transform: translateY(-35%) rotate(-135deg);
+}
+
+.origin-select select.form-control,
+.destination-select select.form-control {
+    text-shadow: none !important;
+    font-weight: 500 !important;
+    appearance: none !important;
+    width: 100% !important;
+    min-height: 52px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    padding: 0.9rem 2.6rem 0.9rem 1rem !important;
+    box-sizing: border-box !important;
+    padding-right: 2.6rem !important;
+    background-image: none !important;
+}
+
+.origin-select select.form-control option,
+.destination-select select.form-control option {
+    background: var(--dark-slate);
+    color: var(--white);
+}
+
+body.light-theme .origin-select select.form-control,
+body.light-theme .destination-select select.form-control {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+}
+
+body.light-theme .origin-select select.form-control option,
+body.light-theme .destination-select select.form-control option {
+    color: #000000 !important;
+}
+
+#origin.form-control,
+#destination.form-control {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+#origin.form-control option,
+#destination.form-control option {
+    background: var(--dark-slate);
+    color: var(--white);
+    font-weight: 500;
+    padding: 8px 6px;
+}
+
+#origin.form-control::-webkit-scrollbar,
+#destination.form-control::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Optgroup styling for dark mode visibility */
+#origin.form-control optgroup,
+#destination.form-control optgroup {
+    color: var(--white);
+    background: var(--dark-slate);
+}
+
+#cargoType.form-control optgroup {
+    color: var(--white);
+    background: var(--dark-slate);
+}
+
+body.light-theme #origin.form-control optgroup,
+body.light-theme #destination.form-control optgroup,
+body.light-theme #cargoType.form-control optgroup {
+    color: #000000 !important;
+    background: #ffffff !important;
 }
 
 textarea.form-control {
@@ -1803,8 +1910,8 @@ body.light-theme .contract-type-select select.form-control option {
 
 .contract-form .checkbox-group {
     display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    align-items: flex-start;
+    gap: 0.75rem;
     margin: 1rem 0;
     position: static;
 }
@@ -1813,6 +1920,7 @@ body.light-theme .contract-type-select select.form-control option {
     width: 18px;
     height: 18px;
     margin: 0;
+    margin-top: 2px; /* nudge down to align with first line of label text */
     flex-shrink: 0;
     cursor: pointer;
     border: 1.5px solid rgba(255, 255, 255, 0.4);
@@ -1833,9 +1941,10 @@ body.light-theme .contract-type-select select.form-control option {
     margin-bottom: 0;
     cursor: pointer;
     margin-left: 0;
-    line-height: 1.4;
-    display: flex;
-    align-items: center;
+    line-height: 1.5;
+    display: block;
+    align-self: flex-start;
+    padding-top: 1px;
 }
 
 .contract-form .form-actions {
@@ -2080,19 +2189,25 @@ body.light-theme .certification-container .cert-type-select {
    =================================== */
 
 .audit-controls {
-    display: grid;
-    grid-template-columns: 1fr 200px;
-    gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
 .filter-group {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
 }
 
-.filter-group > * {
-    flex: 1;
+/* Search input takes remaining space; dropdowns have fixed min-width */
+.filter-group > input.form-control {
+    flex: 2 1 200px;
+    min-width: 150px;
+}
+
+.filter-group > .audit-type-select {
+    flex: 1 1 150px;
+    min-width: 130px;
 }
 
 .filter-group input.form-control,
@@ -2147,6 +2262,30 @@ body.light-theme .filter-group select.form-control.is-open {
     backdrop-filter: blur(12px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.1);
 }
+
+/* Scrollable inner wrapper — keeps rounded corners on container clean */
+.audit-table-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+    width: 100%;
+    /* Thin, themed scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(23, 162, 184, 0.45) transparent;
+}
+.audit-table-scroll::-webkit-scrollbar {
+    height: 5px;
+}
+.audit-table-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.audit-table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(23, 162, 184, 0.45);
+    border-radius: 3px;
+}
+.audit-table-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(23, 162, 184, 0.7);
+}
+
 
 .audit-table {
     width: 100%;
@@ -2434,6 +2573,16 @@ body.light-theme .audit-logs {
     box-shadow: 0 4px 16px rgba(14, 76, 124, 0.06), inset 0 0 12px rgba(255, 255, 255, 0.08);
 }
 
+body.light-theme .audit-table-scroll {
+    scrollbar-color: rgba(14, 76, 124, 0.35) transparent;
+}
+body.light-theme .audit-table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(14, 76, 124, 0.35);
+}
+body.light-theme .audit-table-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 76, 124, 0.55);
+}
+
 body.light-theme #registration-section .form-container {
     box-shadow: 0 4px 20px rgba(14, 76, 124, 0.10);
 }
@@ -2670,11 +2819,15 @@ body.light-theme #contracts-section .contract-select-arrow {
 body.light-theme #contracts-section .form-check-label {
     color: #16293d !important;
     text-shadow: none !important;
+    display: block !important;
+    align-self: flex-start !important;
 }
 
 body.light-theme #contracts-section .form-check-input {
     border-color: rgba(14, 76, 124, 0.4) !important;
     background: #ffffff !important;
+    margin-top: 2px !important;
+    flex-shrink: 0 !important;
 }
 
 body.light-theme #contracts-section .form-actions {
@@ -3629,7 +3782,7 @@ body.light-theme {
     position: fixed;
     top: 72px;
     left: 0;
-    width: 160px;
+    width: 200px;
     height: calc(100vh - 72px);
     background: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
@@ -3832,7 +3985,7 @@ body.light-theme {
 }
 
 .admin-main-content {
-    margin-left: 160px;
+    margin-left: 200px;
     padding: 20px;
     overflow-x: hidden;
     background: transparent;
@@ -4616,75 +4769,1108 @@ body.compact-view .dashboard-panel {
    CSS here handles internal visual styling only.
    =================================== */
 
-/* Card header strip */
+/* adminProfileCard — now in-sidebar, no floating/fixed positioning needed */
 #adminProfileCard::before {
-    content: 'Administrator Details';
-    display: block;
-    padding: 11px 14px 10px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent, #d4a843);
-    background: rgba(212, 168, 67, 0.08);
-    border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.1));
+    content: none; /* title is in the HTML, not injected by CSS */
 }
-
-/* Row container — JS renders these from renderAdminProfileCard() */
-#adminProfileCard .profile-card-inner {
-    padding: 10px 14px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
 #adminProfileCard .profile-card-title {
-    display: none; /* hidden — replaced by ::before header */
+    display: block; /* show the HTML title */
 }
 
-#adminProfileCard .profile-row {
+/* ===================================
+   SIDEBAR FIXES — FINAL CLEAN PATCH
+   Matches user-dashboard.css patterns
+   =================================== */
+
+/* 1. SIDEBAR WIDTH — expand so text is fully visible */
+.admin-sidebar {
+    width: max-content !important;
+    min-width: 200px !important;
+    max-width: 280px !important;
+}
+.admin-main-content {
+    margin-left: 240px !important;
+}
+
+/* 2. LOGOUT BUTTON — grey default, red on hover (matches user dashboard) */
+.sidebar-footer .logout-btn {
+    color: rgba(226, 236, 248, 0.50) !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease !important;
+}
+.sidebar-footer .logout-btn:hover {
+    background: rgba(224, 82, 82, 0.1) !important;
+    border-color: rgba(224, 82, 82, 0.22) !important;
+    color: #e05252 !important;
+}
+.sidebar-footer .logout-btn:focus-visible {
+    outline: 2px solid rgba(224, 82, 82, 0.45) !important;
+    outline-offset: 2px !important;
+}
+
+/* 3. SYSTEM ADMINISTRATOR card — in-sidebar, matches user-profile-card pattern */
+.admin-profile-card {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 10px;
+    display: grid;
+    gap: 6px;
+    position: static !important;
+    box-shadow: none !important;
+}
+.admin-profile-card-main {
+    position: static !important;
+    display: none !important;
+    margin-top: 8px;
+}
+.admin-profile-card-main:not([hidden]) {
+    display: grid !important;
+}
+
+/* Profile card inner content */
+.admin-profile-card .profile-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.admin-profile-card .profile-card-inner {
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 6px;
+    padding: 0;
 }
-
-#adminProfileCard .profile-label {
-    font-size: 9.5px;
+.admin-profile-card .profile-row {
+    display: grid;
+    gap: 2px;
+}
+.admin-profile-card .profile-label {
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.09em;
-    color: var(--text-muted, #7a8a9a);
-    line-height: 1.3;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+.admin-profile-card strong {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
 }
 
-#adminProfileCard strong {
+/* 4. SIDEBAR USER section — matches user dashboard structure */
+.admin-sidebar .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 4px 4px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+    width: 100%;
+}
+.admin-sidebar .sidebar-user:hover {
+    background: var(--surface-alt);
+    border-color: rgba(212, 168, 67, 0.2);
+}
+.admin-sidebar .sidebar-user-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+.admin-sidebar .sidebar-user-name {
     font-size: 12px;
     font-weight: 600;
-    color: var(--text-primary, #e8f0e8);
-    word-break: break-word;
-    line-height: 1.4;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.admin-sidebar .sidebar-user-role {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.admin-sidebar .admin-avatar {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: rgba(212, 168, 67, 0.12);
+    border: 1px solid rgba(212, 168, 67, 0.26);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4a843;
+    font-size: 1rem;
+    flex-shrink: 0;
 }
 
-/* Divider between rows */
-#adminProfileCard .profile-row + .profile-row {
-    padding-top: 6px;
-    border-top: 1px solid var(--border-color, rgba(255,255,255,0.06));
+/* 5. ICON RENDERING — clean, no overrides that break FA */
+.admin-sidebar .sidebar-item i,
+.admin-sidebar .sidebar-footer i {
+    min-width: 16px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
-/* Light theme */
-body.light-theme #adminProfileCard {
-    background: #ffffff !important;
-    border-color: rgba(14,76,124,0.12) !important;
-    box-shadow: 0 12px 40px rgba(14,76,124,0.18) !important;
-}
-body.light-theme #adminProfileCard::before {
-    background: rgba(14,76,124,0.05);
-    border-color: rgba(14,76,124,0.1);
+/* 6. RESPONSIVE — icon-only at medium, full text at large, drawer on mobile */
+@media (min-width: 1280px) {
+    .admin-sidebar { width: max-content !important; min-width: 200px !important; max-width: 280px !important; }
+    .admin-main-content { margin-left: 240px !important; }
 }
 
-/* Responsive: on very small screens override JS width */
-@media (max-width: 480px) {
-    #adminProfileCard {
-        width: calc(100vw - 20px) !important;
-        left: 10px !important;
+@media (min-width: 768px) and (max-width: 1279px) {
+    .admin-sidebar { width: 56px !important; overflow: visible !important; }
+    .admin-main-content { margin-left: 56px !important; }
+
+    .admin-sidebar .sidebar-section-label,
+    .admin-sidebar .sidebar-item span,
+    .admin-sidebar .sidebar-user-copy { display: none !important; }
+
+    .admin-sidebar .sidebar-item {
+        justify-content: center !important;
+        padding-inline: 0 !important;
+        gap: 0 !important;
     }
+    .admin-sidebar .sidebar-user {
+        justify-content: center !important;
+        padding-inline: 0 !important;
+        gap: 0 !important;
+    }
+    .admin-sidebar .sidebar-item {
+        position: relative !important;
+    }
+    .admin-sidebar .sidebar-item:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(13, 30, 50, 0.97);
+        color: #f0f0eb;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        border: 1px solid rgba(212, 168, 67, 0.2);
+        pointer-events: none;
+        z-index: 9999;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
+}
+
+@media (max-width: 767px) {
+    .admin-sidebar {
+        width: min(82vw, 280px) !important;
+        transform: translateX(-100%) !important;
+        transition: transform 200ms ease !important;
+        z-index: 1040 !important;
+    }
+    .admin-sidebar.active { transform: translateX(0) !important; }
+    .admin-main-content { margin-left: 0 !important; }
+    .sidebar-toggle { display: inline-flex !important; }
+
+    .admin-sidebar .sidebar-section-label,
+    .admin-sidebar .sidebar-item span,
+    .admin-sidebar .sidebar-user-copy { display: flex !important; }
+
+    .admin-sidebar .sidebar-item {
+        justify-content: flex-start !important;
+        padding-inline: revert !important;
+        gap: 10px !important;
+    }
+}
+
+/* 7. LIGHT THEME overrides */
+body.light-theme .admin-sidebar .sidebar-user:hover {
+    background: var(--surface-alt);
+    border-color: rgba(14, 76, 124, 0.15);
+}
+body.light-theme .admin-sidebar .sidebar-user-name { color: var(--text-primary); }
+body.light-theme .admin-sidebar .sidebar-user-role { color: var(--text-muted); }
+body.light-theme .sidebar-footer .logout-btn {
+    color: rgba(50, 60, 80, 0.5) !important;
+}
+body.light-theme .sidebar-footer .logout-btn:hover {
+    color: #c0392b !important;
+    background: rgba(192, 57, 43, 0.08) !important;
+    border-color: rgba(192, 57, 43, 0.18) !important;
+}
+
+/* ===================================
+   USER APPROVALS SECTION
+   Registration request management UI
+   =================================== */
+
+/* Sidebar badge for pending count */
+.approval-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--danger, #dc3545);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    border-radius: 9px;
+    margin-left: auto;
+    line-height: 1;
+    flex-shrink: 0;
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.75; }
+}
+
+/* Filter tabs bar */
+.approval-filter-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.4rem;
+    flex-wrap: wrap;
+}
+
+.approval-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid rgba(226, 236, 248, 0.15);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-secondary, rgba(226, 236, 248, 0.9));
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.2px;
+}
+
+.approval-tab:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(226, 236, 248, 0.3);
+    color: var(--text-primary, #f2f8ff);
+}
+
+.approval-tab.active {
+    background: var(--primary-blue, #0E4C7C);
+    border-color: var(--primary-blue, #0E4C7C);
+    color: #fff;
+}
+
+.tab-count {
+    background: rgba(255,255,255,0.2);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.approval-tab.active .tab-count {
+    background: rgba(255,255,255,0.25);
+}
+
+.btn-refresh-approvals {
+    margin-left: auto;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(226, 236, 248, 0.15);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-refresh-approvals:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+/* Container states */
+.approvals-container {
+    min-height: 200px;
+    position: relative;
+}
+
+.approvals-loading,
+.approvals-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 3rem 1rem;
+    color: var(--text-muted, rgba(208, 224, 238, 0.76));
+    font-size: 0.9rem;
+}
+
+.approvals-loading i,
+.approvals-empty i {
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Request cards */
+.approval-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(226, 236, 248, 0.1);
+    border-radius: 10px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 0.85rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    animation: cardSlideIn 0.3s ease-out;
+}
+
+@keyframes cardSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.approval-card:hover {
+    border-color: rgba(226, 236, 248, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.approval-card.card-pending  { border-left: 3px solid var(--warning, #ffc107); }
+.approval-card.card-approved { border-left: 3px solid var(--success, #28a745); }
+.approval-card.card-rejected { border-left: 3px solid var(--danger,  #dc3545); opacity: 0.75; }
+
+/* Card info */
+.approval-card-info {}
+
+.approval-card-name {
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--text-primary, #f2f8ff);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.approval-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.pill-pending  { background: rgba(255,193,7,0.18);  color: #ffc107; }
+.pill-approved { background: rgba(40,167,69,0.18);  color: #48d46a; }
+.pill-rejected { background: rgba(220,53,69,0.18);  color: #f06070; }
+
+.approval-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.4rem;
+    margin-top: 0.4rem;
+}
+
+.approval-card-meta span {
+    font-size: 0.8rem;
+    color: var(--text-muted, rgba(208, 224, 238, 0.76));
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.approval-card-meta i {
+    font-size: 0.72rem;
+    color: var(--secondary-teal, #17A2B8);
+    width: 12px;
+    text-align: center;
+}
+
+.approval-card-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.55rem;
+}
+
+.approval-rejection-note {
+    margin-top: 0.5rem;
+    font-size: 0.78rem;
+    color: #f06070;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-style: italic;
+}
+
+/* Action buttons */
+.approval-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 100px;
+    align-items: flex-end;
+}
+
+.btn-approve,
+.btn-reject {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    justify-content: center;
+    transition: all 0.2s ease;
+    letter-spacing: 0.2px;
+}
+
+.btn-approve {
+    background: var(--success, #28a745);
+    color: #fff;
+}
+.btn-approve:hover {
+    background: #1e9637;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40,167,69,0.35);
+}
+
+.btn-reject {
+    background: rgba(220, 53, 69, 0.12);
+    color: #f06070;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+.btn-reject:hover {
+    background: rgba(220, 53, 69, 0.22);
+    color: #ff7b89;
+    border-color: rgba(220, 53, 69, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-approve:disabled,
+.btn-reject:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Confirm dialog inline */
+.approval-confirm-inline {
+    background: rgba(220, 53, 69, 0.08);
+    border: 1px solid rgba(220, 53, 69, 0.25);
+    border-radius: 8px;
+    padding: 0.7rem 0.85rem;
+    margin-top: 0.5rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 160px;
+}
+
+.approval-confirm-inline.show { display: flex; }
+
+.confirm-question {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.confirm-btns {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.btn-confirm-yes,
+.btn-confirm-no {
+    flex: 1;
+    padding: 0.3rem 0;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s ease;
+}
+
+.btn-confirm-yes {
+    background: var(--success, #28a745);
+    color: #fff;
+}
+.btn-confirm-yes:hover { background: #1e9637; }
+
+.btn-confirm-no {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+.btn-confirm-no:hover {
+    background: rgba(255,255,255,0.14);
+    color: var(--text-primary);
+}
+
+/* Light theme overrides */
+body.light-theme .approval-tab {
+    background: #f0f4f8;
+    border-color: #d0d8e0;
+    color: #4a5568;
+}
+body.light-theme .approval-tab:hover {
+    background: #e2eaf2;
+    color: #2d3748;
+}
+body.light-theme .approval-tab.active {
+    background: var(--primary-blue, #0E4C7C);
+    border-color: var(--primary-blue);
+    color: #fff;
+}
+body.light-theme .approval-card {
+    background: #fff;
+    border-color: #e2e8f0;
+}
+body.light-theme .approval-card:hover {
+    background: #f8fafc;
+    border-color: #c8d8e8;
+}
+body.light-theme .approval-card-name { color: #1a202c; }
+body.light-theme .approval-card-meta span { color: #718096; }
+body.light-theme .approval-card-date { color: #a0aec0; }
+body.light-theme .confirm-question { color: #4a5568; }
+body.light-theme .btn-confirm-no {
+    background: #f0f4f8;
+    color: #4a5568;
+    border-color: #d0d8e0;
+}
+body.light-theme .btn-refresh-approvals {
+    background: #f0f4f8;
+    border-color: #d0d8e0;
+    color: #4a5568;
+}
+body.light-theme .approvals-loading,
+body.light-theme .approvals-empty {
+    color: #718096;
+}
+
+/* ===================================
+   BLOCKCHAIN & WORKFLOW ENHANCEMENTS
+   =================================== */
+
+/* ── TX Hash display in audit table ─────────────────────── */
+.tx-hash {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    padding: 3px 7px;
+    border-radius: 4px;
+    display: inline-block;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.tx-hash.blockchain-verified {
+    background: rgba(40, 200, 120, 0.12);
+    color: #48d46a;
+    border: 1px solid rgba(40, 200, 120, 0.28);
+}
+
+.tx-hash.blockchain-verified::before {
+    content: '⛓ ';
+    font-style: normal;
+    font-size: 0.68rem;
+}
+
+.tx-hash.tx-local {
+    background: rgba(255, 193, 7, 0.10);
+    color: var(--warning, #ffc107);
+    border: 1px solid rgba(255, 193, 7, 0.22);
+}
+
+.tx-hash.tx-local::before {
+    content: '⏳ ';
+    font-size: 0.68rem;
+}
+
+code.tx-hash:hover {
+    transform: none;
+    opacity: 0.9;
+}
+
+/* Role badge in audit table */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(14, 76, 124, 0.18);
+    color: var(--secondary-teal, #17A2B8);
+    border: 1px solid rgba(23, 162, 184, 0.22);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* Cargo ID cell in audit table */
+.cargo-id-cell {
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent, #d4a843);
+}
+
+.details-cell {
+    font-size: 0.82rem;
+    color: var(--text-secondary, rgba(226, 236, 248, 0.9));
+    max-width: 280px;
+    word-break: break-word;
+}
+
+/* Certificate TX hash inline display */
+.cert-tx {
+    display: block;
+    margin-top: 2px;
+    color: var(--text-muted);
+    font-size: 0.70rem;
+}
+.cert-tx code {
+    font-size: 0.68rem;
+    background: rgba(40, 200, 120, 0.08);
+    color: #48d46a;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+
+/* ── Blockchain chain visualization ─────────────────────── */
+.blockchain-chain-view {
+    margin: 1.5rem 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.chain-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1.2rem;
+    background: rgba(40, 200, 120, 0.07);
+    border-bottom: 1px solid rgba(40, 200, 120, 0.15);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #48d46a;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.chain-header i { font-size: 0.9rem; }
+
+.chain-count {
+    margin-left: auto;
+    font-size: 0.72rem;
+    background: rgba(40, 200, 120, 0.15);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #48d46a;
+}
+
+.chain-blocks {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 1.1rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(40, 200, 120, 0.2) transparent;
+}
+
+.chain-blocks::-webkit-scrollbar { height: 4px; }
+.chain-blocks::-webkit-scrollbar-thumb {
+    background: rgba(40, 200, 120, 0.2);
+    border-radius: 2px;
+}
+
+.chain-block {
+    flex-shrink: 0;
+    width: 220px;
+    background: var(--surface, rgba(30,45,60,0.9));
+    border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.chain-block:hover {
+    border-color: rgba(40, 200, 120, 0.35);
+    transform: translateY(-2px);
+}
+
+.block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.85rem;
+    background: rgba(40, 200, 120, 0.08);
+    border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.07));
+}
+
+.block-index {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #48d46a;
+    background: rgba(40, 200, 120, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.block-action {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-secondary, rgba(226,236,248,0.8));
+    max-width: 130px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.block-body {
+    padding: 0.75rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.block-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.block-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted, rgba(208, 224, 238, 0.5));
+    min-width: 48px;
+    flex-shrink: 0;
+    padding-top: 1px;
+}
+
+.block-value {
+    font-size: 0.73rem;
+    color: var(--text-primary, #f2f8ff);
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.block-hash {
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: #48d46a;
+    background: rgba(40, 200, 120, 0.08);
+    padding: 1px 4px;
+    border-radius: 3px;
+    word-break: break-all;
+}
+
+.block-hash.prev {
+    color: var(--secondary-teal, #17A2B8);
+    background: rgba(23, 162, 184, 0.08);
+}
+
+.block-ts {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color, rgba(255,255,255,0.06));
+    background: rgba(0,0,0,0.12);
+}
+
+/* Chain link between blocks */
+.chain-link {
+    flex-shrink: 0;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(40, 200, 120, 0.6);
+    font-size: 0.9rem;
+    animation: chainPulse 2s ease-in-out infinite;
+}
+
+@keyframes chainPulse {
+    0%, 100% { color: rgba(40,200,120,0.4); }
+    50%       { color: rgba(40,200,120,0.9); }
+}
+
+/* ── Blockchain Toast notification ───────────────────────── */
+.blockchain-toast {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: rgba(10, 25, 42, 0.97);
+    border: 1px solid rgba(40, 200, 120, 0.35);
+    border-left: 4px solid #48d46a;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    max-width: 380px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: slideInRight 0.3s ease-out;
+}
+
+.bc-toast-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(40, 200, 120, 0.12);
+    border: 1.5px solid rgba(40, 200, 120, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #48d46a;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.bc-toast-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.bc-toast-body strong {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #48d46a;
+    letter-spacing: 0.2px;
+}
+
+.bc-toast-body span {
+    font-size: 0.78rem;
+    color: var(--text-secondary, rgba(226,236,248,0.8));
+}
+
+.bc-tx {
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    color: rgba(72, 212, 106, 0.8);
+    background: rgba(40, 200, 120, 0.08);
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-top: 2px;
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bc-toast-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 2px;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    align-self: flex-start;
+}
+.bc-toast-close:hover { opacity: 1; }
+
+/* ── Registration info box ─────────────────────────────── */
+.registration-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+    padding: 0.75rem 1rem;
+    background: rgba(40, 200, 120, 0.07);
+    border: 1px solid rgba(40, 200, 120, 0.18);
+    border-left: 3px solid #48d46a;
+    border-radius: 7px;
+    font-size: 0.81rem;
+    color: var(--text-secondary, rgba(226,236,248,0.8));
+}
+
+.registration-notice i {
+    color: #48d46a;
+    flex-shrink: 0;
+}
+
+/* ── Light theme overrides ───────────────────────────────── */
+body.light-theme .tx-hash.blockchain-verified {
+    background: rgba(22, 163, 74, 0.10);
+    color: #166534;
+    border-color: rgba(22, 163, 74, 0.25);
+}
+
+body.light-theme .chain-block {
+    background: #fff;
+    border-color: #e2e8f0;
+}
+
+body.light-theme .chain-block:hover { border-color: rgba(22,163,74,0.35); }
+
+body.light-theme .block-action { color: #374151; }
+body.light-theme .block-value  { color: #111827; }
+
+body.light-theme .blockchain-toast {
+    background: rgba(255,255,255,0.98);
+    border-color: rgba(22,163,74,0.3);
+}
+
+body.light-theme .bc-toast-body strong { color: #166534; }
+body.light-theme .bc-toast-body span   { color: #374151; }
+body.light-theme .role-badge {
+    background: rgba(14,76,124,0.08);
+    color: #0e4c7c;
+    border-color: rgba(14,76,124,0.18);
+}
+body.light-theme .cargo-id-cell { color: var(--accent, #b45309); }
+
+body.light-theme .blockchain-chain-view {
+    background: #f9fafb;
+    border-color: #e5e7eb;
+}
+
+body.light-theme .chain-header {
+    background: rgba(22,163,74,0.07);
+    border-color: rgba(22,163,74,0.15);
+    color: #166534;
+}
+
+/* ===================================
+   EMPTY STATE ROWS (dynamic tables)
+   =================================== */
+.empty-state-row {
+    text-align: center;
+    padding: 2.5rem 1rem !important;
+    color: var(--text-muted, rgba(208, 224, 238, 0.55));
+    font-size: 0.88rem;
+}
+
+.empty-state-row i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.6rem;
+    opacity: 0.4;
+}
+
+/* Loading placeholder for KPI values */
+.stat-value:empty::after,
+.stat-value:contains("—") {
+    content: '—';
+    opacity: 0.4;
+}
+
+body.light-theme .empty-state-row {
+    color: var(--text-muted);
+}
+
+/* ===================================
+   CERTIFICATE DOWNLOAD BUTTON
+   =================================== */
+.cert-download-btn {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.cert-download-btn:hover {
+    color: var(--success, #28a745) !important;
+    border-color: rgba(40, 167, 69, 0.4) !important;
+    background: rgba(40, 167, 69, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+.cert-download-btn::after {
+    content: 'Download PDF';
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 3px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.cert-download-btn:hover::after {
+    opacity: 1;
+}
+
+/* ===================================
+   AUDIT TABLE — improved status badges
+   =================================== */
+.action-badge.status-updated,
+.action-badge.status-update {
+    background: rgba(23, 162, 184, 0.2);
+    color: #17A2B8;
+    border: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+/* Role badge showing admin name */
+.role-badge[title] {
+    cursor: default;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* "Not on Record" state in audit */
+.audit-table .details-cell {
+    max-width: 300px;
+}
+
+body.light-theme .cert-download-btn:hover {
+    color: #1e8a2e !important;
+    border-color: rgba(30, 138, 46, 0.4) !important;
+    background: rgba(30, 138, 46, 0.08) !important;
 }

@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#1a1f1a">
     <title>Admin Dashboard - Shipyard Cargo Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="../Css/admin-dashboard-new.css?v=20260427-fixed-v3" rel="stylesheet">
 </head>
 <body>
@@ -61,34 +61,43 @@
                     <div class="sidebar-section-label">WORKSPACE</div>
 
                     <nav class="sidebar-nav">
-                        <button class="sidebar-item active" data-section="dashboard" aria-selected="true">
+                        <button class="sidebar-item active" data-section="dashboard" data-tooltip="Dashboard Monitoring" aria-selected="true">
                             <i class="fas fa-chart-line"></i>
                             <span>Dashboard Monitoring</span>
                         </button>
 
-                        <button class="sidebar-item" data-section="registration" aria-selected="false">
+                        <button class="sidebar-item" data-section="registration" data-tooltip="Cargo Registration" aria-selected="false">
                             <i class="fas fa-cube"></i>
                             <span>Cargo Registration</span>
                         </button>
 
-                        <button class="sidebar-item" data-section="tracking" aria-selected="false">
+                        <button class="sidebar-item" data-section="tracking" data-tooltip="Cargo Tracking" aria-selected="false">
                             <i class="fas fa-map-location-dot"></i>
                             <span>Cargo Tracking Management</span>
                         </button>
 
-                        <button class="sidebar-item" data-section="contracts" aria-selected="false">
+                        <button class="sidebar-item" data-section="contracts" data-tooltip="Smart Contracts" aria-selected="false">
                             <i class="fas fa-handshake"></i>
                             <span>Smart Contract Execution</span>
                         </button>
 
-                        <button class="sidebar-item" data-section="certification" aria-selected="false">
+                        <button class="sidebar-item" data-section="certification" data-tooltip="Certification Issuance" aria-selected="false">
                             <i class="fas fa-certificate"></i>
                             <span>Certification Issuance</span>
                         </button>
 
-                        <button class="sidebar-item" data-section="audit" aria-selected="false">
+                        <button class="sidebar-item" data-section="audit" data-tooltip="Audit Monitoring" aria-selected="false">
                             <i class="fas fa-clipboard-list"></i>
                             <span>Audit Monitoring</span>
+                        </button>
+                    </nav>
+
+                    <div class="sidebar-section-label" style="margin-top:0.5rem;">USER MANAGEMENT</div>
+                    <nav class="sidebar-nav sidebar-nav-user-mgmt">
+                        <button class="sidebar-item" data-section="user-approvals" data-tooltip="User Approvals" aria-selected="false" id="userApprovalsBtn">
+                            <i class="fas fa-user-check"></i>
+                            <span>User Approvals</span>
+                            <span class="approval-badge" id="approvalBadge" style="display:none;">0</span>
                         </button>
                     </nav>
 
@@ -103,33 +112,32 @@
                                 <i class="fas fa-user-tie" aria-hidden="true"></i>
                             </div>
                             <div class="sidebar-user-copy">
+                                <span class="sidebar-user-name" id="sidebarAdminName">Admin</span>
                                 <span class="sidebar-user-role">System Administrator</span>
                             </div>
                         </div>
 
                         <div class="admin-profile-card admin-profile-card-main" id="adminProfileCard" hidden>
                             <div class="profile-card-title">Administrator Details</div>
-                            <div class="profile-card-inner">
-                                <div class="profile-row">
-                                    <span class="profile-label">Full Name</span>
-                                    <strong id="profileFullName">-</strong>
-                                </div>
-                                <div class="profile-row">
-                                    <span class="profile-label">Email</span>
-                                    <strong id="profileEmail">-</strong>
-                                </div>
-                                <div class="profile-row">
-                                    <span class="profile-label">Contact Number</span>
-                                    <strong id="profileContact">-</strong>
-                                </div>
-                                <div class="profile-row">
-                                    <span class="profile-label">CNIC</span>
-                                    <strong id="profileCnic">-</strong>
-                                </div>
-                                <div class="profile-row">
-                                    <span class="profile-label">User Role</span>
-                                    <strong id="profileRole">-</strong>
-                                </div>
+                            <div class="profile-row">
+                                <span class="profile-label">Full Name</span>
+                                <strong id="profileFullName">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">Email</span>
+                                <strong id="profileEmail">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">Contact Number</span>
+                                <strong id="profileContact">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">CNIC</span>
+                                <strong id="profileCnic">-</strong>
+                            </div>
+                            <div class="profile-row">
+                                <span class="profile-label">User Role</span>
+                                <strong id="profileRole">-</strong>
                             </div>
                         </div>
                     </div>
@@ -155,7 +163,7 @@
                                 <span class="kpi-label"><span class="kpi-dot"></span> Recent Registrations</span>
                                 <i class="fas fa-boxes"></i>
                             </div>
-                            <p class="stat-value" id="dash-registered-count">5</p>
+                            <p class="stat-value" id="dash-registered-count">—</p>
                             <span class="stat-change positive" id="dash-registered-change">+2 today</span>
                             <div class="kpi-foot" id="dash-registered-foot">From cargo registration workflow</div>
                         </div>
@@ -165,7 +173,7 @@
                                 <span class="kpi-label"><span class="kpi-dot"></span> Tracking Updates</span>
                                 <i class="fas fa-map-location-dot"></i>
                             </div>
-                            <p class="stat-value" id="dash-tracking-count">3</p>
+                            <p class="stat-value" id="dash-tracking-count">—</p>
                             <span class="stat-change positive" id="dash-tracking-change">2 in transit</span>
                             <div class="kpi-foot" id="dash-tracking-foot">Overview from tracking module</div>
                         </div>
@@ -175,7 +183,7 @@
                                 <span class="kpi-label"><span class="kpi-dot"></span> Contracts Executed</span>
                                 <i class="fas fa-handshake"></i>
                             </div>
-                            <p class="stat-value" id="dash-contract-count">2</p>
+                            <p class="stat-value" id="dash-contract-count">—</p>
                             <span class="stat-change positive" id="dash-contract-change">1 pending verification</span>
                             <div class="kpi-foot" id="dash-contract-foot">High-level smart contract status</div>
                         </div>
@@ -185,7 +193,7 @@
                                 <span class="kpi-label"><span class="kpi-dot"></span> Certificates Issued</span>
                                 <i class="fas fa-certificate"></i>
                             </div>
-                            <p class="stat-value" id="dash-certificate-count">2</p>
+                            <p class="stat-value" id="dash-certificate-count">—</p>
                             <span class="stat-change negative" id="dash-certificate-change">5 audit logs created</span>
                             <div class="kpi-foot" id="dash-certificate-foot">Snapshot from certification and audit modules</div>
                         </div>
@@ -214,42 +222,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="dashboardRegistrationBody">
-                                        <tr>
-                                            <td class="job-id">CS-0001</td>
-                                            <td>
-                                                <strong>Oceanic Electronics Ltd.</strong>
-                                                <span>Registered cargo manifest and quantity</span>
-                                            </td>
-                                            <td>Electronics</td>
-                                            <td><span class="status-badge complete">Registered</span></td>
-                                            <td>Shanghai</td>
-                                            <td>Karachi</td>
-                                            <td><button class="btn btn-ghost view-btn" type="button">View</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="job-id">CS-0002</td>
-                                            <td>
-                                                <strong>Textile Export Group</strong>
-                                                <span>Validated shipping and supplier details</span>
-                                            </td>
-                                            <td>Textiles</td>
-                                            <td><span class="status-badge complete">Registered</span></td>
-                                            <td>Mumbai</td>
-                                            <td>Karachi</td>
-                                            <td><button class="btn btn-ghost view-btn" type="button">View</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="job-id">CS-0003</td>
-                                            <td>
-                                                <strong>Delta Machinery Co.</strong>
-                                                <span>Awaiting route and customs verification</span>
-                                            </td>
-                                            <td>Machinery</td>
-                                            <td><span class="status-badge queued">Pending</span></td>
-                                            <td>Dubai</td>
-                                            <td>Karachi</td>
-                                            <td><button class="btn btn-ghost view-btn" type="button">View</button></td>
-                                        </tr>
+                                        <!-- Populated dynamically from DB by renderDashboardMonitoring() -->
                                     </tbody>
                                 </table>
                             </div>
@@ -265,36 +238,27 @@
                             </div>
 
                             <div class="revenue-total">
-                                <div class="revenue-value" id="dash-payment-registered">Registered: 0</div>
-                                <div class="revenue-delta positive" id="dash-payment-released">Released: 0</div>
+                                <div class="revenue-value" id="dash-payment-registered">Registered: —</div>
+                                <div class="revenue-delta positive" id="dash-payment-released">Released: —</div>
                             </div>
 
                             <div class="mini-chart" aria-label="Cargo payment status chart">
-                                <span id="dash-payment-bar-registered" style="height: 100%"></span>
-                                <span id="dash-payment-bar-released" class="active" style="height: 60%"></span>
-                                <span id="dash-payment-bar-pending" style="height: 40%"></span>
+                                <span id="dash-payment-bar-registered" style="height: 8%"></span>
+                                <span id="dash-payment-bar-released" class="active" style="height: 8%"></span>
+                                <span id="dash-payment-bar-pending" style="height: 8%"></span>
                             </div>
                             <div class="chart-axis">
                                 <span>Registered</span><span>Released</span><span>Pending</span>
                             </div>
 
                             <div class="payment-status-chart" id="dash-payment-chart-body">
-                                <div class="payment-chart-row">
-                                    <span class="payment-chart-id">CS-0001</span>
-                                    <div class="payment-chart-track"><span class="payment-chart-fill released" style="width: 100%"></span></div>
-                                    <span class="payment-chart-badge released">Released</span>
+                                    <!-- Populated dynamically from DB -->
                                 </div>
-                                <div class="payment-chart-row">
-                                    <span class="payment-chart-id">CS-0002</span>
-                                    <div class="payment-chart-track"><span class="payment-chart-fill pending" style="width: 52%"></span></div>
-                                    <span class="payment-chart-badge pending">Pending</span>
-                                </div>
-                            </div>
 
                             <div class="payout-block">
                                 <div>
                                     <div class="panel-kicker">Pending Releases</div>
-                                    <div class="payout-value" id="dash-payment-pending">Pending: 0</div>
+                                    <div class="payout-value" id="dash-payment-pending">Pending: —</div>
                                 </div>
                                 <div class="payout-meta">
                                     <span>Latest Payment Activity</span>
@@ -313,30 +277,7 @@
                         </div>
 
                         <div class="activity-list">
-                            <div class="activity-item warning-item">
-                                <div class="activity-icon"><i class="fas fa-box-open"></i></div>
-                                <div class="activity-copy">
-                                    <strong>Cargo Registered - CS-0003</strong>
-                                    <span>Registration completed with pending route verification.</span>
-                                </div>
-                                <span class="activity-time">2h ago</span>
-                            </div>
-                            <div class="activity-item danger-item">
-                                <div class="activity-icon"><i class="fas fa-map-location-dot"></i></div>
-                                <div class="activity-copy">
-                                    <strong>Tracking Updated - CS-0002</strong>
-                                    <span>Status moved to Arrived in cargo tracking management.</span>
-                                </div>
-                                <span class="activity-time">45m ago</span>
-                            </div>
-                            <div class="activity-item info-item">
-                                <div class="activity-icon"><i class="fas fa-certificate"></i></div>
-                                <div class="activity-copy">
-                                    <strong>Certificate Issued - CS-0002</strong>
-                                    <span>Certificate of Origin generated and logged in audit trail.</span>
-                                </div>
-                                <span class="activity-time">12m ago</span>
-                            </div>
+                            <!-- Populated dynamically from DB by loadCargoList() -->
                         </div>
                     </section>
                 </section>
@@ -360,10 +301,16 @@
                                     <div class="cargo-type-select">
                                         <select id="cargoType" class="form-control" required>
                                             <option value="">Select Type</option>
-                                            <option value="Electronics">Electronics</option>
-                                            <option value="Textiles">Textiles</option>
-                                            <option value="Machinery">Machinery</option>
-                                            <option value="Raw Materials">Raw Materials</option>
+                                            <option value="Hull">Hull</option>
+                                            <option value="Deck">Deck</option>
+                                            <option value="Keel">Keel</option>
+                                            <option value="Bulkhead">Bulkhead</option>
+                                            <option value="Bow">Bow</option>
+                                            <option value="Stern">Stern</option>
+                                            <option value="Propeller">Propeller</option>
+                                            <option value="Rudder">Rudder</option>
+                                            <option value="Anchor">Anchor</option>
+                                            <option value="Superstructure">Superstructure</option>
                                         </select>
                                         <span class="cargo-select-arrow" aria-hidden="true"></span>
                                     </div>
@@ -384,17 +331,59 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="origin"><i class="fas fa-map-marker"></i> Origin</label>
-                                    <input type="text" id="origin" class="form-control" placeholder="Port of origin" required>
+                                    <div class="origin-select">
+                                        <select id="origin" class="form-control" required>
+                                            <option value="">Select Origin Port</option>
+                                            <optgroup label="Pakistan">
+                                                <option value="Karachi Port">Karachi Port</option>
+                                                <option value="Port Qasim">Port Qasim</option>
+                                                <option value="Gwadar Port">Gwadar Port</option>
+                                            </optgroup>
+                                            <optgroup label="Turkey">
+                                                <option value="Port of Istanbul">Port of Istanbul</option>
+                                                <option value="Port of Izmir">Port of Izmir</option>
+                                                <option value="Port of Mersin">Port of Mersin</option>
+                                            </optgroup>
+                                            <optgroup label="China">
+                                                <option value="Port of Shanghai">Port of Shanghai</option>
+                                                <option value="Port of Shenzhen">Port of Shenzhen</option>
+                                                <option value="Port of Guangzhou">Port of Guangzhou</option>
+                                                <option value="Port of Ningbo-Zhoushan">Port of Ningbo-Zhoushan</option>
+                                            </optgroup>
+                                        </select>
+                                        <span class="origin-select-arrow" aria-hidden="true"></span>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="destination"><i class="fas fa-location-dot"></i> Destination</label>
-                                    <input type="text" id="destination" class="form-control" placeholder="Port of destination" required>
+                                    <div class="destination-select">
+                                        <select id="destination" class="form-control" required>
+                                            <option value="">Select Destination Port</option>
+                                            <optgroup label="Pakistan">
+                                                <option value="Karachi Port">Karachi Port</option>
+                                                <option value="Port Qasim">Port Qasim</option>
+                                                <option value="Gwadar Port">Gwadar Port</option>
+                                            </optgroup>
+                                            <optgroup label="Turkey">
+                                                <option value="Port of Istanbul">Port of Istanbul</option>
+                                                <option value="Port of Izmir">Port of Izmir</option>
+                                                <option value="Port of Mersin">Port of Mersin</option>
+                                            </optgroup>
+                                            <optgroup label="China">
+                                                <option value="Port of Shanghai">Port of Shanghai</option>
+                                                <option value="Port of Shenzhen">Port of Shenzhen</option>
+                                                <option value="Port of Guangzhou">Port of Guangzhou</option>
+                                                <option value="Port of Ningbo-Zhoushan">Port of Ningbo-Zhoushan</option>
+                                            </optgroup>
+                                        </select>
+                                        <span class="destination-select-arrow" aria-hidden="true"></span>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="eta"><i class="fas fa-calendar"></i> ETA</label>
+                                    <label for="eta"><i class="fas fa-calendar"></i> ETA (Estimated Time of Arrival)</label>
                                     <input type="date" id="eta" class="form-control" required>
                                 </div>
                                 <div class="form-group">
@@ -459,54 +448,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>CS-0001</td>
-                                    <td>Electronics</td>
-                                    <td>Shanghai</td>
-                                    <td>Karachi</td>
-                                    <td><span class="status-badge in-transit">In Transit</span></td>
-                                    <td>2026-04-30</td>
-                                    <td>
-                                        <button class="btn-icon update-btn" title="Update Status">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon view-btn" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>CS-0002</td>
-                                    <td>Textiles</td>
-                                    <td>Mumbai</td>
-                                    <td>Karachi</td>
-                                    <td><span class="status-badge arrived">Arrived</span></td>
-                                    <td>2026-04-28</td>
-                                    <td>
-                                        <button class="btn-icon update-btn" title="Update Status">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon view-btn" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>CS-0003</td>
-                                    <td>Machinery</td>
-                                    <td>Dubai</td>
-                                    <td>Karachi</td>
-                                    <td><span class="status-badge registered">Registered</span></td>
-                                    <td>2026-05-05</td>
-                                    <td>
-                                        <button class="btn-icon update-btn" title="Update Status">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon view-btn" title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <!-- Populated dynamically from DB by loadCargoList() -->
                             </tbody>
                         </table>
                     </div>
@@ -599,33 +541,7 @@
                         <div class="contract-history">
                             <h4>Execution History</h4>
                             <div class="history-list">
-                                <div class="history-item success">
-                                    <div class="history-icon">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <div class="history-content">
-                                        <p><strong>Payment Release - CS-0001</strong></p>
-                                        <small>2026-04-23 10:45 AM | Blockchain ID: 0x7a2f...</small>
-                                    </div>
-                                </div>
-                                <div class="history-item success">
-                                    <div class="history-icon">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <div class="history-content">
-                                        <p><strong>Customs Clearance - CS-0002</strong></p>
-                                        <small>2026-04-23 09:20 AM | Blockchain ID: 0x3c1e...</small>
-                                    </div>
-                                </div>
-                                <div class="history-item pending">
-                                    <div class="history-icon">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <div class="history-content">
-                                        <p><strong>Delivery Confirmation - CS-0003</strong></p>
-                                        <small>Pending verification...</small>
-                                    </div>
-                                </div>
+                                <!-- Populated dynamically from DB by loadCargoList() -->
                             </div>
                         </div>
                     </div>
@@ -680,34 +596,7 @@
 
                         <div class="certificates-list">
                             <h4>Issued Certificates</h4>
-                            <div class="cert-item">
-                                <div class="cert-icon">
-                                    <i class="fas fa-scroll"></i>
-                                </div>
-                                <div class="cert-info">
-                                    <p><strong>Certificate #001 - CS-0001</strong></p>
-                                    <small>Certificate of Authenticity | Issued: 2026-04-22</small>
-                                </div>
-                                <div class="cert-actions">
-                                    <button class="btn-icon" title="Download">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="cert-item">
-                                <div class="cert-icon">
-                                    <i class="fas fa-scroll"></i>
-                                </div>
-                                <div class="cert-info">
-                                    <p><strong>Certificate #002 - CS-0002</strong></p>
-                                    <small>Certificate of Origin | Issued: 2026-04-21</small>
-                                </div>
-                                <div class="cert-actions">
-                                    <button class="btn-icon" title="Download">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            <!-- Populated dynamically from DB by loadCargoList() -->
                         </div>
                     </div>
                 </section>
@@ -733,10 +622,21 @@
                                 </select>
                                 <span class="audit-select-arrow" aria-hidden="true"></span>
                             </div>
+                            <div class="audit-type-select audit-time-select">
+                                <select id="auditTimeFilter" class="form-control">
+                                    <option value="">All Time</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                                <span class="audit-select-arrow" aria-hidden="true"></span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="audit-logs">
+                        <div class="audit-table-scroll">
                         <table class="audit-table">
                             <thead>
                                 <tr>
@@ -749,48 +649,53 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>2026-04-23 10:45:23</td>
-                                    <td><span class="action-badge registration">Registration</span></td>
-                                    <td>Admin</td>
-                                    <td>CS-0001</td>
-                                    <td>Cargo registered - Electronics shipment</td>
-                                    <td><code>0x7a2f...</code></td>
-                                </tr>
-                                <tr>
-                                    <td>2026-04-23 10:30:15</td>
-                                    <td><span class="action-badge update">Update</span></td>
-                                    <td>Admin</td>
-                                    <td>CS-0002</td>
-                                    <td>Status updated to Arrived</td>
-                                    <td><code>0x3c1e...</code></td>
-                                </tr>
-                                <tr>
-                                    <td>2026-04-23 09:45:00</td>
-                                    <td><span class="action-badge contract">Contract</span></td>
-                                    <td>Admin</td>
-                                    <td>CS-0001</td>
-                                    <td>Payment contract executed</td>
-                                    <td><code>0x5d4b...</code></td>
-                                </tr>
-                                <tr>
-                                    <td>2026-04-23 09:20:45</td>
-                                    <td><span class="action-badge certificate">Certificate</span></td>
-                                    <td>Admin</td>
-                                    <td>CS-0002</td>
-                                    <td>Certificate of Origin issued</td>
-                                    <td><code>0x9e8c...</code></td>
-                                </tr>
-                                <tr>
-                                    <td>2026-04-23 08:00:30</td>
-                                    <td><span class="action-badge login">Login</span></td>
-                                    <td>Admin</td>
-                                    <td>-</td>
-                                    <td>Admin logged in successfully</td>
-                                    <td>-</td>
-                                </tr>
+                                <!-- Populated dynamically from DB by loadLiveAuditLogs() -->
                             </tbody>
                         </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- User Approvals Section -->
+                <section class="content-section" id="user-approvals-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user-check"></i> User Registration Approvals</h2>
+                        <p>Review and approve or reject pending user registration requests</p>
+                    </div>
+
+                    <!-- Filter tabs -->
+                    <div class="approval-filter-tabs">
+                        <button class="approval-tab active" data-filter="pending">
+                            <i class="fas fa-clock"></i> Pending
+                            <span class="tab-count" id="tab-pending-count">0</span>
+                        </button>
+                        <button class="approval-tab" data-filter="approved">
+                            <i class="fas fa-check-circle"></i> Approved
+                            <span class="tab-count" id="tab-approved-count"></span>
+                        </button>
+                        <button class="approval-tab" data-filter="rejected">
+                            <i class="fas fa-times-circle"></i> Rejected
+                            <span class="tab-count" id="tab-rejected-count"></span>
+                        </button>
+                        <button class="approval-tab" data-filter="all">
+                            <i class="fas fa-list"></i> All
+                        </button>
+                        <button class="btn-refresh-approvals" id="refreshApprovals" title="Refresh">
+                            <i class="fas fa-rotate-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Requests list -->
+                    <div class="approvals-container" id="approvalsContainer">
+                        <div class="approvals-loading" id="approvalsLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Loading registration requests...</span>
+                        </div>
+                        <div class="approvals-empty" id="approvalsEmpty" style="display:none;">
+                            <i class="fas fa-inbox"></i>
+                            <p>No registration requests found</p>
+                        </div>
+                        <div class="approvals-list" id="approvalsList"></div>
                     </div>
                 </section>
             </main>
@@ -801,58 +706,5 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../JS/admin-dashboard.js?v=20260427-fixed-v2"></script>
-    
-    <!-- Force correct positioning for profile card -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Override the click handler to ensure positioning works
-            setTimeout(function() {
-                const card = document.getElementById('adminProfileCard');
-                const trigger = document.getElementById('sidebarProfileTrigger');
-                const sidebar = document.getElementById('adminSidebar');
-                
-                if (card && trigger && sidebar) {
-                    // Store original click handler behavior
-                    const forcePosition = function() {
-                        if (!card.hasAttribute('hidden')) {
-                            const triggerRect = trigger.getBoundingClientRect();
-                            const sidebarRect = sidebar.getBoundingClientRect();
-                            const isMobile = window.matchMedia('(max-width: 767px)').matches;
-                            
-                            if (!isMobile) {
-                                const top = triggerRect.top;
-                                const left = sidebarRect.width + 8;
-                                
-                                card.style.cssText = `
-                                    position: fixed !important;
-                                    top: ${top}px !important;
-                                    left: ${left}px !important;
-                                    width: 320px !important;
-                                    display: grid !important;
-                                    z-index: 1045 !important;
-                                `;
-                            }
-                        }
-                    };
-                    
-                    // Watch for changes to hidden attribute
-                    const observer = new MutationObserver(function(mutations) {
-                        mutations.forEach(function(mutation) {
-                            if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
-                                setTimeout(forcePosition, 50);
-                            }
-                        });
-                    });
-                    
-                    observer.observe(card, { attributes: true, attributeFilter: ['hidden'] });
-                    
-                    // Force position on first open attempt
-                    trigger.addEventListener('click', function() {
-                        setTimeout(forcePosition, 100);
-                    });
-                }
-            }, 500);
-        });
-    </script>
 </body>
 </html>

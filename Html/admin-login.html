@@ -6,25 +6,30 @@
     <meta name="description" content="Shipyard_PK Cargo Management - Admin Login">
     <meta name="theme-color" content="#0E4C7C">
     <title>Admin Login - Shipyard Cargo Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="../Css/admin-login.css" rel="stylesheet">
 </head>
 <body class="admin-login-body">
+
     <!-- Main Login Container -->
     <div class="admin-login-container">
-        <!-- Anchor Icon Inside Card -->
+
+        <!-- Anchor Icon -->
         <a href="../Html/index.html" class="card-logo-wrapper" title="Back to Home">
             <img src="../Assest/anchor_icon.png" alt="Shipyard_PK Logo" class="card-logo">
         </a>
-        <!-- Left Side - Information -->
+
+        <!-- Left Panel — Info -->
         <div class="admin-login-left">
             <div class="left-content">
-                <h1 class="left-title">
-                    Admin Control Panel
-                </h1>
+                <h1 class="left-title">Admin Control Panel</h1>
                 <p class="left-description">
-                    Access the administrative dashboard to manage users, cargo shipments, verify blockchain records, and oversee all system operations. Only authorized administrators with valid credentials may proceed.
+                    Access the administrative dashboard to manage users, cargo shipments,
+                    verify blockchain records, and oversee all system operations.
+                    Only authorized administrators with valid credentials may proceed.
                 </p>
                 <div class="features-list">
                     <div class="feature-item">
@@ -41,77 +46,209 @@
                     </div>
                     <div class="feature-item">
                         <i class="fas fa-shield-alt"></i>
-                        <span>Security & compliance</span>
+                        <span>Security &amp; compliance</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Side - Admin Login Form -->
+        <!-- Right Panel — Forms -->
         <div class="admin-login-right">
-            <div class="admin-login-form-wrapper">
-                <h2 class="admin-login-title">
-                    <i class="fas fa-lock"></i> Admin Login
-                </h2>
 
-                <!-- Alert Messages -->
+            <!-- ══ STEP 1: Credentials ══ -->
+            <div class="admin-login-form-wrapper" id="step-credentials">
+                <div class="admin-login-heading">
+                    <div class="heading-vertical-login">
+                        <span class="vertical-login-text">Login</span>
+                    </div>
+                    <div class="heading-main">
+                        <h2 class="admin-login-title">
+                            <i class="fas fa-lock"></i> Admin
+                        </h2>
+                        <p class="admin-login-subtitle">Admin Control Panel</p>
+                    </div>
+                </div>
+
+                <!-- Step indicator -->
+                <div class="step-indicator">
+                    <div class="step-dot active" data-step="1"></div>
+                    <div class="step-line"></div>
+                    <div class="step-dot" data-step="2"></div>
+                </div>
+                <p class="step-label">Step 1 of 2 — Credentials</p>
+
                 <div id="alert-container"></div>
 
                 <p class="admin-notice">
-                    <i class="fas fa-info-circle"></i> Unauthorized access attempts are logged and monitored.
-                </p>
-
-                <p class="admin-demo-creds">
-                    <i class="fas fa-key"></i> Default: muneeb@shipyard.pk / Admin@Muneeb2024
+                    <i class="fas fa-info-circle"></i>
+                    Unauthorized access attempts are logged and monitored.
                 </p>
 
                 <form id="adminLoginForm" method="POST" action="#" class="admin-login-form" novalidate>
-                    <!-- Admin Email -->
                     <div class="form-group">
                         <label for="adminEmail">
                             <i class="fas fa-envelope"></i> Admin Email
                         </label>
-                        <input type="email" id="adminEmail" name="adminEmail" class="form-control" placeholder="admin@shipyard.pk" required>
+                        <input type="email" id="adminEmail" name="adminEmail"
+                               class="form-control" placeholder="admin@shipyard.pk" required>
                         <small class="form-error" id="adminEmail-error"></small>
                     </div>
 
-                    <!-- Admin Password -->
                     <div class="form-group">
                         <label for="adminPassword">
                             <i class="fas fa-key"></i> Admin Password
                         </label>
-                        <input type="password" id="adminPassword" name="adminPassword" class="form-control" placeholder="••••••••" required>
+                        <div class="pw-wrap">
+                            <input type="password" id="adminPassword" name="adminPassword"
+                                   class="form-control" placeholder="••••••••" required>
+                            <button type="button" class="pw-toggle" id="pwToggle" tabindex="-1"
+                                    aria-label="Toggle password">
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
                         <small class="form-error" id="adminPassword-error"></small>
                     </div>
 
-                    <!-- Two-Factor Authentication (Future) -->
                     <div class="form-group info-box">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Two-factor authentication will be enabled for all admin accounts</span>
+                        <i class="fas fa-shield-halved"></i>
+                        <span>Two-factor authentication is required for all admin accounts</span>
                     </div>
 
-                    <!-- Login Button -->
-                    <button type="submit" class="btn-admin-login">Authenticate</button>
+                    <button type="submit" class="btn-admin-login">
+                        <i class="fas fa-arrow-right"></i> Continue
+                    </button>
                 </form>
 
-                <!-- Back Links -->
+                <div class="forgot-password-wrap">
+                    <a href="#" class="forgot-password-link" onclick="return false;">
+                        <i class="fas fa-key"></i> Forgot Password?
+                    </a>
+                </div>
+
                 <div class="back-links">
-                    <p>
-                        <a href="login.html" class="back-to-user">
-                            <i class="fas fa-arrow-left"></i> Back to User Login
-                        </a>
+                    <p><a href="login.html" class="back-to-user">
+                        <i class="fas fa-arrow-left"></i> Back to User Login
+                    </a></p>
+                    <p><a href="index.html" class="back-to-home">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a></p>
+                </div>
+            </div>
+
+            <!-- ══ STEP 2: 2FA Verification ══ -->
+            <div class="admin-login-form-wrapper" id="step-2fa" style="display:none;">
+                <h2 class="admin-login-title">
+                    <i class="fas fa-mobile-screen-button"></i> Two-Factor Auth
+                </h2>
+
+                <!-- Step indicator -->
+                <div class="step-indicator">
+                    <div class="step-dot done" data-step="1"><i class="fas fa-check"></i></div>
+                    <div class="step-line active"></div>
+                    <div class="step-dot active" data-step="2">2</div>
+                </div>
+                <p class="step-label">Step 2 of 2 — Authentication Code</p>
+
+                <div id="alert-container-2fa"></div>
+
+                <!-- QR Code section -->
+                <div class="qr-section" id="qrSection">
+                    <p class="qr-instruction">
+                        <i class="fas fa-qrcode"></i>
+                        Scan this QR code with your authenticator app
+                        <small>(Google Authenticator, Authy, Microsoft Authenticator)</small>
                     </p>
+                    <div class="qr-container">
+                        <div id="qrCanvas"></div>
+                        <div class="qr-loading" id="qrLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                    <details class="manual-entry">
+                        <summary>
+                            <i class="fas fa-keyboard"></i> Can't scan? Enter manually
+                        </summary>
+                        <div class="manual-entry-body">
+                            <p class="manual-label">Manual entry key:</p>
+                            <code class="secret-display" id="secretDisplay">—</code>
+                            <button class="btn-copy-secret" id="btnCopySecret" title="Copy to clipboard">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <p class="manual-hint">
+                                Account: <strong id="manualAccount">—</strong><br>
+                                Issuer: <strong>Shipyard CMS</strong><br>
+                                Type: TOTP &nbsp;|&nbsp; Period: 30s &nbsp;|&nbsp; Digits: 6
+                            </p>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- OTP Input -->
+                <form id="twoFaForm" class="admin-login-form twofa-form" novalidate>
+                    <p class="otp-instruction">
+                        <i class="fas fa-clock"></i>
+                        Enter the 6-digit code from your authenticator app
+                    </p>
+
+                    <!-- Six individual digit inputs -->
+                    <div class="otp-inputs" id="otpInputs" aria-label="One-time password">
+                        <input class="otp-digit" type="text" inputmode="numeric"
+                               maxlength="1" pattern="[0-9]" autocomplete="one-time-code"
+                               aria-label="Digit 1">
+                        <input class="otp-digit" type="text" inputmode="numeric"
+                               maxlength="1" pattern="[0-9]"
+                               aria-label="Digit 2">
+                        <input class="otp-digit" type="text" inputmode="numeric"
+                               maxlength="1" pattern="[0-9]"
+                               aria-label="Digit 3">
+                        <div class="otp-sep">—</div>
+                        <input class="otp-digit" type="text" inputmode="numeric"
+                               maxlength="1" pattern="[0-9]"
+                               aria-label="Digit 4">
+                        <input class="otp-digit" type="text" inputmode="numeric"
+                               maxlength="1" pattern="[0-9]"
+                               aria-label="Digit 5">
+                        <input class="otp-digit" type="text" inputmode="numeric"
+                               maxlength="1" pattern="[0-9]"
+                               aria-label="Digit 6">
+                        <!-- Hidden combined field for submission -->
+                        <input type="hidden" id="otp_code" name="otp_code">
+                    </div>
+
+                    <!-- Countdown timer -->
+                    <div class="otp-timer" id="otpTimer">
+                        <div class="timer-ring">
+                            <svg viewBox="0 0 36 36" aria-hidden="true">
+                                <circle class="timer-track" cx="18" cy="18" r="15.9"
+                                        fill="none" stroke-width="2"/>
+                                <circle class="timer-arc" id="timerArc" cx="18" cy="18" r="15.9"
+                                        fill="none" stroke-width="2"
+                                        stroke-dasharray="100 100" stroke-dashoffset="0"/>
+                            </svg>
+                            <span class="timer-num" id="timerNum">30</span>
+                        </div>
+                        <span class="timer-label">seconds remaining</span>
+                    </div>
+
+                    <button type="submit" class="btn-admin-login btn-verify" id="btnVerify" disabled>
+                        <i class="fas fa-shield-check"></i> Verify Code
+                    </button>
+                </form>
+
+                <div class="back-links" style="margin-top:1rem;">
                     <p>
-                        <a href="index.html" class="back-to-home">
-                            <i class="fas fa-home"></i> Back to Home
-                        </a>
+                        <button class="back-to-step1" id="backToStep1" type="button">
+                            <i class="fas fa-arrow-left"></i> Use different credentials
+                        </button>
                     </p>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Scripts -->
+        </div><!-- /admin-login-right -->
+    </div><!-- /admin-login-container -->
+
+    <!-- QRCode.js — lightweight, no dependencies, CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../JS/admin-login.js"></script>
